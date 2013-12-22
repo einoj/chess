@@ -9,8 +9,8 @@ static const GdkColor lbrown = {0,0xfb00,0xce00,0x9c00};
 GdkColor prevColor;
 int clicks = 0;
 int player = 0;
-GtkWidget *table, *prevEventbox, *hpane;
-GtkLabel *prevLabel, *currentPlayer;
+GtkWidget *table, *prevEventbox, *hpane, *currentPlayer;
+GtkLabel *prevLabel;
 int move[4];
 unsigned tableFrom[4];
 int board[8][8];
@@ -27,13 +27,12 @@ int main (int argc, char *argv[])
 	/*fill the board array with pieces*/
 	initBoard(board);
 	resetPassantArrays();
-	GtkWidget *window, *label, *eventbox, *currentPlayerLabel;
+	GtkWidget *window, *eventbox, *label;
 	gtk_init (&argc, &argv);
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW (window), "Chess board");
   	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
 	gtk_widget_set_size_request(window, 680,350);
-	currentPlayerLabel = gtk_label_new("Player: ");
 	table = gtk_table_new (8,8,TRUE);
 	/*one is larger to make the squares wider*/	
 	char *pieces[64] = { "♜", "♞", "♝","♛","♚","♝","♞","♜",
@@ -226,9 +225,9 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 				drawGuiBoard(labelBoard, board);	
 				player = !player; /*next players turn*/
 				if (player) {
-					gtk_label_set_text(currentPlayer, "Current player:\nBlack");
+					gtk_label_set_text(GTK_LABEL(currentPlayer), "Current player:\nBlack");
 				} else {
-					gtk_label_set_text(currentPlayer, "Current player:\nWhite");
+					gtk_label_set_text(GTK_LABEL(currentPlayer), "Current player:\nWhite");
 				}
 			}
 		//	if (!u) {
