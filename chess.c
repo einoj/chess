@@ -7,6 +7,7 @@ extern int bishop(int pos[], int board[][8]);
 extern int queen(int pos[], int board[][8]);
 extern int king(int pos[], int board[][8]);
 extern int pawn(int pos[], int player, int board[][8]);
+extern int makemove(int pos[], int board[][8]);
 
 /*
 struct wChessPieces {
@@ -202,12 +203,24 @@ int checkMove(int input[], int player, int board[][8]) {
 	/*convert char to int*/
 	/*get the piece at the given coordinate*/
 	int piece = board[input[1]][input[0]];
+    /*hack for making 2 step pawn work*/
+    int tmp;
 	if (piece == 1 || piece == 7) {
 		/*piece is a pawn*/
-		if (pawn(input, player, board)) {
+        tmp = pawn(input, player, board);
+		if (tmp == 1) {
+            /*The move is also made if pawn() returns 2*/
+            /*some extraprocessing is needed and therfore pawn makes the move itself*/
+            /*This is because of how pawn always called makemove before*/
+            makemove(input, board);
 			/*move completed*/
 			return 1;
 		}
+        else if (tmp == 2)
+        {
+            /*two step move*/
+            return 1;
+        }
 		else {
 			/*invalid move*/
 			return 0;
@@ -216,6 +229,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 2 || piece == 8) {
 		/*piece is a knight*/
 		if (knight(input, board)) {
+            makemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -227,6 +241,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 3 || piece == 9) {
 		/*piece is a bishop*/
 		if (bishop(input, board)) {
+            makemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -238,6 +253,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 4 || piece == 10) {
 		/*piece is a rook*/
 		if (rook(input, board)) {
+            makemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -249,6 +265,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 5 || piece == 11) {
 		/*piece is a queen*/
 		if (queen(input, board)) {
+            makemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -260,6 +277,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 6 || piece == 12) {
 		/*piece is a king*/
 		if (king(input, board)) {
+            makemove(input, board);
 			/*move complteded*/
 			return 1;
 		}

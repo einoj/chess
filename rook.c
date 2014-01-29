@@ -1,4 +1,3 @@
-extern makemove(int pos[], int b[][8]);
 extern checkPosition(int row, int col, int b[][8]);
 
 int rook(int pos[], int board[][8]) {
@@ -14,7 +13,6 @@ int rook(int pos[], int board[][8]) {
 			}
 		}
 		/*reached new position*/
-		makemove(pos,board);
 		return 1;
 	}
 	else if (pos[3] == pos[1] && pos[2] < pos[0]) {
@@ -26,7 +24,6 @@ int rook(int pos[], int board[][8]) {
 			}
 		}
 		/*reached new position*/
-		makemove(pos,board);
 		return 1;
 	}
 	else if (pos[3] < pos[1] && pos[2] == pos[0]) {
@@ -38,7 +35,6 @@ int rook(int pos[], int board[][8]) {
 			}
 		}
 		/*reached new position*/
-		makemove(pos,board);
 		return 1;
 	}
 	else if (pos[3] == pos[1] && pos[2] > pos[0]) {
@@ -50,7 +46,6 @@ int rook(int pos[], int board[][8]) {
 			}
 		}
 		/*reached new position*/
-		makemove(pos,board);
 		return 1;
 	}
 	else {

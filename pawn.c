@@ -12,14 +12,12 @@ int pawn(int pos[], int player, int board[][8]) {
 			/*move north east*/
 			if (checkPosition(pos[3], pos[2], board)) {
 				/*piece at position, therfore move is leagal*/
-				makemove(pos, board);
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			/*a pawn was at new pos the previous round, therfore move is leagal*/
 			} else if(checkPassant(pos[1],pos[2],player)) {
 				/*remove the pawn that moved last round*/
 				board[pos[3]-1][pos[2]] = 0;
-				makemove(pos,board);
 				return 1;
 			}
 		}
@@ -27,14 +25,12 @@ int pawn(int pos[], int player, int board[][8]) {
 			/*move north west*/
 			if (checkPosition(pos[3], pos[2], board)) {
 				/*piece at position, therfore move is leagal*/
-				makemove(pos, board);
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			/*a pawn was at new pos the previous round, therfore move is leagal*/
 			} else if(checkPassant(pos[1],pos[2],player)) {
 				/*remove the pawn that moved last round*/
 				board[pos[3]-1][pos[2]] = 0;
-				makemove(pos,board);
 				return 1;
 			}
 			else {
@@ -46,7 +42,6 @@ int pawn(int pos[], int player, int board[][8]) {
 			/*Move one step north*/
 			if (!checkPosition(pos[3], pos[2], board)) {
 				/*piece not at position therfore move is leagal*/
-				makemove(pos, board);
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			}
@@ -64,7 +59,7 @@ int pawn(int pos[], int player, int board[][8]) {
 				* pessant array. This is done after the move is made
 				* because makemove resets the pessant arrays.*/
 				setPassant(pos[0],player);
-				return 1;
+				return 2;
 			}
 			else {
 				/*illegal move*/
@@ -83,7 +78,6 @@ int pawn(int pos[], int player, int board[][8]) {
 			/*move south east*/
 			if (checkPosition(pos[3], pos[2], board)) {
 				/*piece at position, therfore move is leagal*/
-				makemove(pos, board);
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 
@@ -91,7 +85,6 @@ int pawn(int pos[], int player, int board[][8]) {
 			} else if(checkPassant(pos[1],pos[2],player)) {
 				/*remove the pawn that moved last round*/
 				board[pos[3]+1][pos[2]] = 0;
-				makemove(pos,board);
 				return 1;
 			}
 		}
@@ -99,14 +92,12 @@ int pawn(int pos[], int player, int board[][8]) {
 			/*move south west*/
 			if (checkPosition(pos[3], pos[2], board)) {
 				/*piece at position, therfore move is leagal*/
-				makemove(pos, board);
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			/*a pawn was at new pos the previous round, therfore move is leagal*/
 			} else if(checkPassant(pos[1],pos[2],player)) {
 				/*remove the pawn that moved last round*/
 				board[pos[3]+1][pos[2]] = 0;
-				makemove(pos,board);
 				return 1;
 			}
 			else {
@@ -118,7 +109,6 @@ int pawn(int pos[], int player, int board[][8]) {
 			/*Move one step south*/
 			if (!checkPosition(pos[3], pos[2], board)) {
 				/*piece not at position therfore move is leagal*/
-				makemove(pos, board);
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			}
@@ -136,7 +126,7 @@ int pawn(int pos[], int player, int board[][8]) {
 				* pessant array. This is done after the move is made
 				* because makemove resets the pessant arrays.*/
 				setPassant(pos[0],player);
-				return 1;
+				return 2;
 			}
 			else {
 				/*illegal move*/
