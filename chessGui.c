@@ -9,8 +9,8 @@ static const GdkColor lbrown = {0,0xfb00,0xce00,0x9c00};
 GdkColor prevColor;
 int clicks = 0;
 int player = 0;
-GtkWidget *table, *prevEventbox, *hpane, *currentPlayer;
-GtkLabel *prevLabel;
+GtkWidget *table, *prevEventbox, *hpane;
+GtkLabel *prevLabel, *currentPlayer;
 int move[4];
 unsigned tableFrom[4];
 int board[8][8];
@@ -27,12 +27,13 @@ int main (int argc, char *argv[])
 	/*fill the board array with pieces*/
 	initBoard(board);
 	resetPassantArrays();
-	GtkWidget *window, *eventbox, *label;
+	GtkWidget *window, *label, *eventbox, *currentPlayerLabel;
 	gtk_init (&argc, &argv);
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW (window), "Chess board");
   	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
 	gtk_widget_set_size_request(window, 680,350);
+	currentPlayerLabel = gtk_label_new("Player: ");
 	table = gtk_table_new (8,8,TRUE);
 	/*one is larger to make the squares wider*/	
 	char *pieces[64] = { "♜", "♞", "♝","♛","♚","♝","♞","♜",
@@ -164,11 +165,12 @@ char *convertClipieceToGuiPiece(int cliPiece){
 }
 char *tall[64]={"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63"};
 int drawGuiBoard(GtkWidget *labels[][8], int cliBoard[][8]) {
-		int i, j;
+		int i, j, p=0;
 		for (i = 0; i < 8; i++) {
 			for (j = 0; j < 8; j++) {
 				gtk_label_set_text(labelBoard[i][j], convertClipieceToGuiPiece(cliBoard[i][j]));
 				//gtk_label_set_text(labelBoard[i][j], tall[p]);
+				p++;
 			}
 		}
 		return 0;
@@ -224,9 +226,9 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 				drawGuiBoard(labelBoard, board);	
 				player = !player; /*next players turn*/
 				if (player) {
-					gtk_label_set_text(GTK_LABEL(currentPlayer), "Current player:\nBlack");
+					gtk_label_set_text(currentPlayer, "Current player:\nBlack");
 				} else {
-					gtk_label_set_text(GTK_LABEL(currentPlayer), "Current player:\nWhite");
+					gtk_label_set_text(currentPlayer, "Current player:\nWhite");
 				}
 			}
 		//	if (!u) {
