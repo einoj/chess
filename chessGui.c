@@ -169,7 +169,7 @@ int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8]) {
 		int i, j, p=0;
 		for (i = 0; i < 8; i++) {
 			for (j = 0; j < 8; j++) {
-				gtk_label_set_text(labelBoard[i][j], convertClipieceToGuiPiece(cliBoard[i][j]));
+				gtk_label_set_text(labels[i][j], convertClipieceToGuiPiece(cliBoard[i][j]));
 				//gtk_label_set_text(labelBoard[i][j], tall[p]);
 				p++;
 			}
