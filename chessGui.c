@@ -10,7 +10,7 @@ GdkColor prevColor;
 int clicks = 0;
 int player = 0;
 GtkWidget *table, *prevEventbox, *hpane;
-GtkLabel *prevLabel, *currentPlayer;
+GtkLabel *currentPlayer;
 int move[4];
 unsigned tableFrom[4];
 int board[8][8];
@@ -196,7 +196,6 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 					NULL);
 			cfrom(right,top,move);
 			/*save label*/
-			//prevLabel = label;
 			prevEventbox = eventbox;
 			/*save the current coordinates*/
 			tableFrom[0] = left;
@@ -221,9 +220,7 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 				/*even square, darkbrown color*/
 				gtk_widget_modify_bg(prevEventbox, GTK_STATE_NORMAL, &lbrown);
 			}
-			printf("player: %i\n",player);
 			int u = guiMove(player, move, board);
-			printf("%i %i %i %i\n", move[0],move[1],move[2],move[3]);
 			if (!u) {
 				drawGuiBoard(labelBoard, board);	
 				player = !player; /*next players turn*/
@@ -233,16 +230,6 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 					gtk_label_set_text(currentPlayer, "Current player:\nWhite");
 				}
 			}
-		//	if (!u) {
-		//		/*move was successfull*/
-
-		//		/*move piece to last selected position*/
-		//		const gchar *text = gtk_label_get_text (prevLabel);
-		//		gtk_label_set_text(label, text);
-		//		/*set prev position blank*/
-		//		gtk_label_set_text(prevLabel,"    "); 
-		//		player = !player; /*next players turn*/
-		//	}
 			clicks = 0;
 		}
 	}
