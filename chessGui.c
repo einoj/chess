@@ -15,7 +15,7 @@ int move[4];
 unsigned tableFrom[4];
 int board[8][8];
 /*container for the labels of the gui board*/
-GtkWidget *labelBoard[8][8];
+GtkLabel *labelBoard[8][8];
 
 extern int guiMove(int player, int *move, int board[][8]);
 /*initBoard method is in chess.c*/
@@ -27,7 +27,8 @@ int main (int argc, char *argv[])
 	/*fill the board array with pieces*/
 	initBoard(board);
 	resetPassantArrays();
-	GtkWidget *window, *label, *eventbox, *currentPlayerLabel;
+	GtkWidget *window, *eventbox, *currentPlayerLabel;
+    GtkLabel *label;
 	gtk_init (&argc, &argv);
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW (window), "Chess board");
@@ -51,7 +52,7 @@ int main (int argc, char *argv[])
 	int oddRow = 1;
 	for (i = 0; i < 8; i ++) {
 		for (j = 0; j < 8; j++) {
-			label = gtk_label_new(pieces[p]);
+			label = (GtkLabel *) gtk_label_new(pieces[p]);
 			/*put the label into the container for easy access when mocing pieces*/
 			labelBoard[i][j]=label;
 			eventbox = gtk_event_box_new();
@@ -73,10 +74,10 @@ int main (int argc, char *argv[])
 				}
 			}
 			gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox),FALSE);
-			gtk_widget_modify_font(label, pango_font_description_from_string(
+			gtk_widget_modify_font((GtkWidget *) label, pango_font_description_from_string(
 									"Serif 26"));
 			/*put label into eventbox*/
-			gtk_container_add(GTK_CONTAINER (eventbox), label);
+			gtk_container_add(GTK_CONTAINER (eventbox), (GtkWidget *) label);
 			/*put eventbox into table*/
 			gtk_table_attach(GTK_TABLE (table), eventbox,j,j+1,i,i+1,
 					GTK_FILL, GTK_FILL, 0, 0);
@@ -102,9 +103,9 @@ int main (int argc, char *argv[])
 	gtk_table_attach(GTK_TABLE (hpane), table, 0, 1, 0, 1,
 			GTK_SHRINK, GTK_SHRINK, 0, 0);
 	/*add game info to the horizontal pane*/
-	currentPlayer = gtk_label_new("Current player:\nWhite");
+	currentPlayer = (GtkLabel *) gtk_label_new("Current player:\nWhite");
 	//gtk_container_add (GTK_CONTAINER (hpane), currentPlayer);
-	gtk_table_attach(GTK_TABLE (hpane), currentPlayer, 1, 2, 0, 1,
+	gtk_table_attach(GTK_TABLE (hpane), (GtkWidget *) currentPlayer, 1, 2, 0, 1,
 			GTK_SHRINK, GTK_SHRINK, 5, 0);
 
 
@@ -164,7 +165,7 @@ char *convertClipieceToGuiPiece(int cliPiece){
 
 }
 char *tall[64]={"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63"};
-int drawGuiBoard(GtkWidget *labels[][8], int cliBoard[][8]) {
+int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8]) {
 		int i, j, p=0;
 		for (i = 0; i < 8; i++) {
 			for (j = 0; j < 8; j++) {
