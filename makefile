@@ -35,3 +35,6 @@ checkPosition.o: checkPosition.c
 
 squareUnderAttack.o: squareUnderAttack.c
 	gcc -c squareUnderAttack.c
+
+clean:
+	rm *.o
