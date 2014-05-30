@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "convCoordinates.h"
 
-static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel*);
+static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
 static const GdkColor green = {0, 0x9700, 0xe300, 0x6400};
 static const GdkColor dbrown = {0,0xd300,0x8d00,0x4700};
 static const GdkColor lbrown = {0,0xfb00,0xce00,0x9c00};
@@ -14,8 +14,6 @@ GtkLabel *prevLabel, *currentPlayer;
 int move[4];
 unsigned tableFrom[4];
 int board[8][8];
-/*container for the labels of the gui board*/
-GtkLabel *labelBoard[8][8];
 
 extern int guiMove(int player, int *move, int board[][8]);
 /*initBoard method is in chess.c*/
@@ -36,6 +34,8 @@ int main (int argc, char *argv[])
 	gtk_widget_set_size_request(window, 680,350);
 	currentPlayerLabel = gtk_label_new("Player: ");
 	table = gtk_table_new (8,8,TRUE);
+    /*container for the labels of the gui board*/
+    GtkLabel *labelBoard[8][8];
 	/*one is larger to make the squares wider*/	
 	char *pieces[64] = { "♜", "♞", "♝","♛","♚","♝","♞","♜",
 						 "♟", "♟", "♟","♟","♟","♟","♟","♟",
@@ -84,7 +84,7 @@ int main (int argc, char *argv[])
 
 
 			g_signal_connect(G_OBJECT (eventbox), "button_press_event",
-					G_CALLBACK (button_pressed), (gpointer) label);
+					G_CALLBACK (button_pressed), (gpointer) labelBoard);
 			gtk_widget_set_events(eventbox, GDK_BUTTON_PRESS_MASK);
 			gtk_widget_realize(eventbox);
 
@@ -92,6 +92,7 @@ int main (int argc, char *argv[])
 		}
 		oddRow = !oddRow;
 	}
+
 
 	/* add 0 spacing pixels between every row and column*/
 	gtk_table_set_row_spacings (GTK_TABLE (table), 0);
@@ -178,7 +179,7 @@ int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8]) {
 }
 
 static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
-			GtkLabel *label)
+			GtkLabel *labelBoard[][8])
 {
 	unsigned left, right, top, bottom;
 
@@ -195,7 +196,7 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 					NULL);
 			cfrom(right,top,move);
 			/*save label*/
-			prevLabel = label;
+			//prevLabel = label;
 			prevEventbox = eventbox;
 			/*save the current coordinates*/
 			tableFrom[0] = left;
