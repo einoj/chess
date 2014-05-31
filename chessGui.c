@@ -25,14 +25,13 @@ int main (int argc, char *argv[])
 	/*fill the board array with pieces*/
 	initBoard(board);
 	resetPassantArrays();
-	GtkWidget *window, *eventbox, *currentPlayerLabel;
+	GtkWidget *window, *eventbox;
     GtkLabel *label;
 	gtk_init (&argc, &argv);
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW (window), "Chess board");
   	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
 	gtk_widget_set_size_request(window, 680,350);
-	currentPlayerLabel = gtk_label_new("Player: ");
 	table = gtk_table_new (8,8,TRUE);
     /*container for the labels of the gui board*/
     GtkLabel *labelBoard[8][8];
