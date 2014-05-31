@@ -174,7 +174,7 @@ int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8]) {
 		return 0;
 }
 
-static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
+static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			GtkLabel *labelBoard[][8])
 {
 	unsigned left, right, top, bottom;
@@ -182,9 +182,9 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 	if (event->type == GDK_BUTTON_PRESS)
 	{
 		if (!clicks) {
-			gtk_widget_modify_bg(eventbox, GTK_STATE_NORMAL, &green);
+			gtk_widget_modify_bg(ebox, GTK_STATE_NORMAL, &green);
 			/*get coordinates of eventbox*/
-			gtk_container_child_get(GTK_CONTAINER(table), eventbox,
+			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach", &left,
 					"right-attach",&right,
 					"top-attach",&top,
@@ -192,7 +192,7 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 					NULL);
 			cfrom(right,top,move);
 			/*save label*/
-			prevEventbox = eventbox;
+			prevEventbox = ebox;
 			/*save the current coordinates*/
 			tableFrom[0] = left;
 			tableFrom[1] = right;
@@ -201,12 +201,13 @@ static gboolean button_pressed (GtkWidget *eventbox, GdkEventButton *event,
 			clicks = 1;
 		} else {
 			/*make move*/
-			gtk_container_child_get(GTK_CONTAINER(table), eventbox,
+			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach", &left,
 					"right-attach",&right,
 					"top-attach",&top,
 					"bottom-attach",&bottom,
 					NULL);
+                printf("TTTTT\n");
 			cto(right,top,move);
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
