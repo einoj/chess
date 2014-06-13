@@ -349,13 +349,9 @@ void printVelcome(void) {
 
 int guiMove(int player, int *move, int board[][8])
 {
-	printBoard(board);
 	if (checkInput(move)) {
 		if (checkColor(move, player, board)) {
-		printf("2\n");
 			if (checkMove(move, player, board)) {
-		printf("3\n");
-				printBoard(board);
 				return 0;
 			}
 		}

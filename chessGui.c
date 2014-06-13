@@ -85,7 +85,11 @@ int main (int argc, char *argv[])
 			g_signal_connect(G_OBJECT (eventbox), "button_press_event",
 					G_CALLBACK (button_pressed), (gpointer) labelBoard);
 			gtk_widget_set_events(eventbox, GDK_BUTTON_PRESS_MASK);
-			gtk_widget_realize(eventbox);
+            /*Dont need widget_realize
+             * connect to a signal that will be called 
+             * after the widget is realized automatically
+             * in g_signal_connect(window)
+			gtk_widget_realize(eventbox);*/
 
 			p++;
 		}
@@ -207,7 +211,6 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 					"top-attach",&top,
 					"bottom-attach",&bottom,
 					NULL);
-                printf("TTTTT\n");
 			cto(right,top,move);
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
