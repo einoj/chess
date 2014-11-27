@@ -52,8 +52,8 @@ int pawn(int pos[], int player, int board[][8]) {
 		}
 		else if (pos[3] == pos[1]+2 && pos[2] == pos[0]) {
 			/*Move two steps north*/
-			if (!checkPosition(pos[3], pos[2], board) && (pos[1] == 1 || pos[1] == 6)) {
-				/*piece not at position, and not moved, therfore move is leagal*/
+			if (!checkPosition(pos[3], pos[2], board) && !checkPosition(pos[3]-1, pos[2], board) && (pos[1] == 1 || pos[1] == 6)) {
+				/*No piece at new position, middle position, and not moved, therfore move is leagal*/
 				makemove(pos, board);
 				/*set the previous collumn position to the 
 				* pessant array. This is done after the move is made
@@ -119,8 +119,8 @@ int pawn(int pos[], int player, int board[][8]) {
 		}
 		else if (pos[3] == pos[1]-2 && pos[2] == pos[0]) {
 			/*Move two steps south*/
-			if (!checkPosition(pos[3], pos[2], board) && (pos[1] == 1 || pos[1] == 6)) {
-				/*piece not at position, and not moved, therfore move is leagal*/
+			if (!checkPosition(pos[3], pos[2], board) && !checkPosition(pos[3]+1, pos[2], board) && (pos[1] == 1 || pos[1] == 6)) {
+				/*No piece at new position, middle position, and not moved, therfore move is leagal*/
 				makemove(pos, board);
 				/*set the previous collumn position to the 
 				* pessant array. This is done after the move is made
