@@ -307,7 +307,7 @@ int checkInput(int input[]) {
 }
 
 int getInput(int player, int move[], int b[][8]) {
-	unsigned char input[10];
+	char input[10];
 	/*get input from player*/
 	if(player) {
 		/* player = 1 black player*/
