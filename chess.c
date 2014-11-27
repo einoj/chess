@@ -286,6 +286,8 @@ int checkMove(int input[], int player, int board[][8]) {
 			return 0;
 		}
 	}
+    /* invalid move */
+    return 0;
 }
 
 int checkInput(int input[]) {
