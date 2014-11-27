@@ -3,7 +3,7 @@ extern int checkPosition(int row, int col, int b[][8]);
 int rook(int pos[], int board[][8]) {
 	/*[col][row][col][row]*/
 	/*pos[] contains current possitions and new possitions [0][1]=current [2][3] = new*/
-	int i, j;
+	int i;
 	if (pos[3] > pos[1] && pos[2] == pos[0]) {
 		/*move north*/
 		for(i = pos[1]+1; i < pos[3]; ++i) {
