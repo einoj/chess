@@ -1,4 +1,4 @@
-extern checkPosition(int row, int col, int b[][8]);
+extern int checkPosition(int row, int col, int b[][8]);
 
 int rook(int pos[], int board[][8]) {
 	/*[col][row][col][row]*/
