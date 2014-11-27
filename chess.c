@@ -337,11 +337,9 @@ int getInput(int player, int move[], int b[][8]) {
 			}
 		}
 	}
-	else {
-		/*wrong input given*/
-		printf("new Move\n");
-		return 1;
-	}
+    /*wrong input given*/
+    printf("new Move\n");
+    return 1;
 }
 
 
