@@ -138,4 +138,6 @@ int pawn(int pos[], int player, int board[][8]) {
 			return 0;
 		}
 	}
+    /*illegal move*/
+    return 0;
 }
