@@ -286,6 +286,8 @@ int checkMove(int input[], int player, int board[][8]) {
 			return 0;
 		}
 	}
+    /* invalid move */
+    return 0;
 }
 
 int checkInput(int input[]) {
@@ -307,7 +309,7 @@ int checkInput(int input[]) {
 }
 
 int getInput(int player, int move[], int b[][8]) {
-	unsigned char input[10];
+	char input[10];
 	/*get input from player*/
 	if(player) {
 		/* player = 1 black player*/
@@ -335,11 +337,9 @@ int getInput(int player, int move[], int b[][8]) {
 			}
 		}
 	}
-	else {
-		/*wrong input given*/
-		printf("new Move\n");
-		return 1;
-	}
+    /*wrong input given*/
+    printf("new Move\n");
+    return 1;
 }
 
 

@@ -7,34 +7,34 @@ chessGui.o: chessGui.c
 	gcc -Wall -g chessGui.c -c `pkg-config --cflags gtk+-2.0` `pkg-config --libs gtk+-2.0`
 
 chess.o: chess.c
-	gcc -c chess.c
+	gcc -Wall -c chess.c
 
 pawn.o: pawn.c
-	gcc -c pawn.c
+	gcc -Wall -c pawn.c
 
 rook.o: rook.c
-	gcc -c rook.c
+	gcc -Wall -c rook.c
 
 knight.o: knight.c
-	gcc -c knight.c
+	gcc -Wall -c knight.c
 
 bishop.o: bishop.c
-	gcc -c bishop.c
+	gcc -Wall -c bishop.c
 
 queen.o: queen.c
-	gcc -c queen.c
+	gcc -Wall -c queen.c
 
 king.o: king.c
-	gcc -c king.c
+	gcc -Wall -c king.c
 
 makemove.o: makemove.c
-	gcc -c makemove.c
+	gcc -Wall -c makemove.c
 
 checkPosition.o: checkPosition.c
-	gcc -c checkPosition.c
+	gcc -Wall -c checkPosition.c
 
 squareUnderAttack.o: squareUnderAttack.c
-	gcc -c squareUnderAttack.c
+	gcc -Wall -c squareUnderAttack.c
 
 clean:
 	rm *.o

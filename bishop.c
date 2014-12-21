@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 extern int checkPosition(int row, int col, int b[][8]);
 
 int bishop(int pos[], int board[][8]) {
