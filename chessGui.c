@@ -184,18 +184,16 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 	unsigned left, right, top, bottom;
 
 	if (event->type == GDK_BUTTON_PRESS)
-            printf("Error\n");
+	{
+		if (!clicks) {
+			gtk_widget_modify_bg(ebox, GTK_STATE_NORMAL, &green);
+			/*get coordinates of eventbox*/
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach", &left,
 					"right-attach",&right,
 					"top-attach",&top,
 					"bottom-attach",&bottom,
 					NULL);
-            printf("halloen\n");
-	{
-		if (!clicks) {
-			gtk_widget_modify_bg(ebox, GTK_STATE_NORMAL, &green);
-			/*get coordinates of eventbox*/
 			cfrom(right,top,move);
 			/*save label*/
 			prevEventbox = ebox;
@@ -206,7 +204,13 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			tableFrom[4] = bottom;
 			clicks = 1;
 		} else {
-		    /*make move*/
+			/*make move*/
+			gtk_container_child_get(GTK_CONTAINER(table), ebox,
+					"left-attach", &left,
+					"right-attach",&right,
+					"top-attach",&top,
+					"bottom-attach",&bottom,
+					NULL);
 			cto(right,top,move);
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
