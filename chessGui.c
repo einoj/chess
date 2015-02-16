@@ -1,6 +1,5 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
-#include "convCoordinates.h"
 
 static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
 static const GdkColor green = {0, 0x9700, 0xe300, 0x6400};
@@ -188,8 +187,9 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 					"width",&width,
 					"height",&height,
 					NULL);
-            printf("test %d %d\n",left,top);
-			cfrom(left+1,top,move);
+      //store the position you move from. It will be used to move the pieces in the board array
+      move[0] = left;
+      move[1] = top;
 			/*save label*/
 			prevEventbox = ebox;
 			/*save the current coordinates*/
@@ -197,15 +197,16 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 		} else {
 			/*make move*/
       //gtk_grid_get_child_at(GTK_GRID(ebox), &left, &top);
-       printf("test \n");
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach",  &left,
 					"top-attach",   &top,
 					"width", &width,
 					"height",&height,
 					NULL);
-       printf("test %d %d\n",left,top);
-			cto(left+1,top,move);
+      //store the position you move to. It will be used to move the pieces in the board array
+      move[2] = left;
+      move[3] = top;
+      printf("%d %d %d %d\n", move[0], move[1], move[2], move[3]);
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
 				/*odd square, lightbrown color*/
