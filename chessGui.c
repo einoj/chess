@@ -100,10 +100,10 @@ int main (int argc, char *argv[])
 	//hpane = gtk_grid_new(1,2,TRUE);
 	hpane = gtk_grid_new();
 	/*add the table to the horizontal pane*/
-  gtk_grid_attach(hpane, table, 0, 0, 1,1);
+  gtk_grid_attach((GtkGrid *) hpane, table, 0, 0, 1,1);
 	/*add game info to the horizontal pane*/
 	currentPlayer = (GtkLabel *) gtk_label_new("Current player:\nWhite");
-  gtk_grid_attach(hpane, (GtkWidget *) currentPlayer,1,0,1,1);
+  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) currentPlayer,1,0,1,1);
 
 
 	/*add table to window*/
