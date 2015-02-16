@@ -11,7 +11,7 @@ chessCLI: CFLAGS += -DCLI
 chessCLI: chessC.o pawn.o rook.o knight.o bishop.o queen.o king.o makemove.o checkPosition.o squareUnderAttack.o letterToInt.h
 	$(CC)  chess.o pawn.o queen.o king.o knight.o rook.o bishop.o checkPosition.o makemove.o squareUnderAttack.o -o chessCLI 
 
-chessGui.o: chessGui.c 
+chessGUI.o: chessGUI.c 
 	$(CC) $(CFLAGS) -c chessGui.c  
 
 chessG.o: chess.c
