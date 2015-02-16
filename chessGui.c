@@ -77,7 +77,8 @@ int main (int argc, char *argv[])
 			/*put label into eventbox*/
 			gtk_container_add(GTK_CONTAINER (eventbox), (GtkWidget *) label);
 			/*put eventbox into table*/
-      gtk_grid_attach(table, eventbox,j,i,1,1);
+      gtk_grid_attach((GtkGrid *) table, eventbox,j,i,1,1);
+      
 
 
 			g_signal_connect(G_OBJECT (eventbox), "button_press_event",
