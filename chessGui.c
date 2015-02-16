@@ -206,7 +206,6 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
       //store the position you move to. It will be used to move the pieces in the board array
       move[2] = left;
       move[3] = top;
-      printf("%d %d %d %d\n", move[0], move[1], move[2], move[3]);
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
 				/*odd square, lightbrown color*/
