@@ -1,5 +1,5 @@
 CC     = gcc
-CFLAGS = -Wall 
+CFLAGS = -Wall
 
 all: chessGUI chessCLI
 
@@ -7,9 +7,9 @@ chessGUI: CFLAGS += -DGUI
 chessGUI: chessGui.o chessG.o pawn.o rook.o knight.o bishop.o queen.o king.o makemove.o checkPosition.o squareUnderAttack.o letterToInt.h
 	$(CC) $(CFLAGS) chessGui.o chess.o pawn.o queen.o king.o knight.o rook.o bishop.o checkPosition.o makemove.o squareUnderAttack.o -o chessGUI `pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0`
 
-chessCLI: CFLAGS += -DCLI
+chessCLI: CFLAGS := -DCLI
 chessCLI: chessC.o pawn.o rook.o knight.o bishop.o queen.o king.o makemove.o checkPosition.o squareUnderAttack.o letterToInt.h
-	$(CC)  chess.o pawn.o queen.o king.o knight.o rook.o bishop.o checkPosition.o makemove.o squareUnderAttack.o -o chessCLI 
+	$(CC) $(CFLAGS) chess.o pawn.o queen.o king.o knight.o rook.o bishop.o checkPosition.o makemove.o squareUnderAttack.o -o chessCLI 
 
 chessGUI.o: chessGUI.c 
 	$(CC) $(CFLAGS) -c chessGui.c  
