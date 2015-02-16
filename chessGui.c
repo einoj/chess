@@ -12,7 +12,6 @@ int player = 0;
 GtkWidget *table, *prevEventbox, *hpane;
 GtkLabel *currentPlayer;
 int move[4];
-unsigned tableFrom[4];
 int board[8][8];
 
 extern int guiMove(int player, int *move, int board[][8]);
@@ -182,7 +181,6 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 		if (!clicks) {
 			gtk_widget_modify_bg(ebox, GTK_STATE_NORMAL, &green);
 			/*get coordinates of eventbox*/
-            printf("test\n");
       //gtk_grid_get_child_at(GTK_GRID(ebox), &left, &top);
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach", &left,
@@ -195,20 +193,18 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			/*save label*/
 			prevEventbox = ebox;
 			/*save the current coordinates*/
-			tableFrom[0] = left;
-			tableFrom[1] = left+1;
-			tableFrom[2] = top;
-			tableFrom[4] = top+1;
 			clicks = 1;
 		} else {
 			/*make move*/
       //gtk_grid_get_child_at(GTK_GRID(ebox), &left, &top);
+       printf("test \n");
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
-					"left", &left,
-					"top",&top,
-					"width",&width,
+					"left-attach",  &left,
+					"top-attach",   &top,
+					"width", &width,
 					"height",&height,
 					NULL);
+       printf("test %d %d\n",left,top);
 			cto(left+1,top,move);
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
