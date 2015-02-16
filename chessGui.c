@@ -32,7 +32,7 @@ int main (int argc, char *argv[])
 	gtk_window_set_title(GTK_WINDOW (window), "Chess board");
   	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
 	gtk_widget_set_size_request(window, 680,350);
-	table = gtk_table_new (8,8,TRUE);
+	table = gtk_grid_new (8,8,TRUE);
     /*container for the labels of the gui board*/
     GtkLabel *labelBoard[8][8];
 	/*one is larger to make the squares wider*/	
@@ -78,12 +78,12 @@ int main (int argc, char *argv[])
 			/*put label into eventbox*/
 			gtk_container_add(GTK_CONTAINER (eventbox), (GtkWidget *) label);
 			/*put eventbox into table*/
-			gtk_table_attach(GTK_TABLE (table), eventbox,j,j+1,i,i+1,
-					GTK_FILL, GTK_FILL, 0, 0);
+      gtk_grid_attach(table, eventbox,j,i,1,1);
 
 
 			g_signal_connect(G_OBJECT (eventbox), "button_press_event",
 					G_CALLBACK (button_pressed), (gpointer) labelBoard);
+
 			gtk_widget_set_events(eventbox, GDK_BUTTON_PRESS_MASK);
             /*Dont need widget_realize
              * connect to a signal that will be called 
@@ -96,21 +96,13 @@ int main (int argc, char *argv[])
 		oddRow = !oddRow;
 	}
 
-
-	/* add 0 spacing pixels between every row and column*/
-	gtk_table_set_row_spacings (GTK_TABLE (table), 0);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 0);
 	/*make a horizontal pane*/
-	hpane = gtk_table_new(1,2,TRUE);
+	hpane = gtk_grid_new(1,2,TRUE);
 	/*add the table to the horizontal pane*/
-	//gtk_container_add (GTK_CONTAINER (hpane), table);
-	gtk_table_attach(GTK_TABLE (hpane), table, 0, 1, 0, 1,
-			GTK_SHRINK, GTK_SHRINK, 0, 0);
+  gtk_grid_attach(hpane, table, 0, 0, 1,1);
 	/*add game info to the horizontal pane*/
 	currentPlayer = (GtkLabel *) gtk_label_new("Current player:\nWhite");
-	//gtk_container_add (GTK_CONTAINER (hpane), currentPlayer);
-	gtk_table_attach(GTK_TABLE (hpane), (GtkWidget *) currentPlayer, 1, 2, 0, 1,
-			GTK_SHRINK, GTK_SHRINK, 5, 0);
+  gtk_grid_attach(hpane, (GtkWidget *) currentPlayer,1,0,1,1);
 
 
 	/*add table to window*/
@@ -188,12 +180,14 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 		if (!clicks) {
 			gtk_widget_modify_bg(ebox, GTK_STATE_NORMAL, &green);
 			/*get coordinates of eventbox*/
+            printf("test\n");
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach", &left,
 					"right-attach",&right,
 					"top-attach",&top,
 					"bottom-attach",&bottom,
 					NULL);
+            printf("test2\n");
 			cfrom(right,top,move);
 			/*save label*/
 			prevEventbox = ebox;
