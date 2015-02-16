@@ -32,7 +32,8 @@ int main (int argc, char *argv[])
 	gtk_window_set_title(GTK_WINDOW (window), "Chess board");
   	gtk_container_set_border_width(GTK_CONTAINER(window), 5);
 	gtk_widget_set_size_request(window, 680,350);
-	table = gtk_grid_new (8,8,TRUE);
+	//table = gtk_grid_new (8,8,TRUE);
+	table = gtk_grid_new ();
     /*container for the labels of the gui board*/
     GtkLabel *labelBoard[8][8];
 	/*one is larger to make the squares wider*/	
@@ -97,7 +98,8 @@ int main (int argc, char *argv[])
 	}
 
 	/*make a horizontal pane*/
-	hpane = gtk_grid_new(1,2,TRUE);
+	//hpane = gtk_grid_new(1,2,TRUE);
+	hpane = gtk_grid_new();
 	/*add the table to the horizontal pane*/
   gtk_grid_attach(hpane, table, 0, 0, 1,1);
 	/*add game info to the horizontal pane*/
@@ -173,7 +175,7 @@ int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8]) {
 static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			GtkLabel *labelBoard[][8])
 {
-	unsigned left, right, top, bottom;
+	unsigned left, top, width, height;
 
 	if (event->type == GDK_BUTTON_PRESS)
 	{
@@ -181,31 +183,33 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			gtk_widget_modify_bg(ebox, GTK_STATE_NORMAL, &green);
 			/*get coordinates of eventbox*/
             printf("test\n");
+      //gtk_grid_get_child_at(GTK_GRID(ebox), &left, &top);
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach", &left,
-					"right-attach",&right,
 					"top-attach",&top,
-					"bottom-attach",&bottom,
+					"width",&width,
+					"height",&height,
 					NULL);
-            printf("test2\n");
-			cfrom(right,top,move);
+            printf("test %d %d\n",left,top);
+			cfrom(left+1,top,move);
 			/*save label*/
 			prevEventbox = ebox;
 			/*save the current coordinates*/
 			tableFrom[0] = left;
-			tableFrom[1] = right;
+			tableFrom[1] = left+1;
 			tableFrom[2] = top;
-			tableFrom[4] = bottom;
+			tableFrom[4] = top+1;
 			clicks = 1;
 		} else {
 			/*make move*/
+      //gtk_grid_get_child_at(GTK_GRID(ebox), &left, &top);
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
-					"left-attach", &left,
-					"right-attach",&right,
-					"top-attach",&top,
-					"bottom-attach",&bottom,
+					"left", &left,
+					"top",&top,
+					"width",&width,
+					"height",&height,
 					NULL);
-			cto(right,top,move);
+			cto(left+1,top,move);
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
 				/*odd square, lightbrown color*/
