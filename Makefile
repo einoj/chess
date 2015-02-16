@@ -1,4 +1,5 @@
 CC     = gcc
+OBJDIR = obj
 CFLAGS = -Wall
 
 all: chessGUI chessCLI
