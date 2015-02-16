@@ -2,9 +2,9 @@
 #include <stdio.h>
 
 static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
-static const GdkColor green = {0, 0x9700, 0xe300, 0x6400};
-static const GdkColor dbrown = {0,0xd300,0x8d00,0x4700};
-static const GdkColor lbrown = {0,0xfb00,0xce00,0x9c00};
+static const GdkRGBA green  = {0.5899, 0.8867, 0.3906, 1};
+static const GdkRGBA dbrown = {0.8242, 0.5508, 0.2773, 1};
+static const GdkRGBA lbrown = {0.9805, 0.8047, 0.6094, 1};
 GdkColor prevColor;
 int clicks = 0;
 int player = 0;
@@ -56,18 +56,18 @@ int main (int argc, char *argv[])
 			eventbox = gtk_event_box_new();
 			if (oddRow) {
 				if (oddCol) {
-					gtk_widget_modify_bg(eventbox, GTK_STATE_NORMAL, &lbrown);
+					gtk_widget_override_background_color(eventbox, GTK_STATE_NORMAL, &lbrown);
 					oddCol = 0;
 				} else {
-					gtk_widget_modify_bg(eventbox, GTK_STATE_NORMAL, &dbrown);
+					gtk_widget_override_background_color(eventbox, GTK_STATE_NORMAL, &dbrown);
 					oddCol = 1;
 				}
 			} else {
 				if (oddCol) {
-					gtk_widget_modify_bg(eventbox, GTK_STATE_NORMAL, &dbrown);
+					gtk_widget_override_background_color(eventbox, GTK_STATE_NORMAL, &dbrown);
 					oddCol = 0;
 				} else {
-					gtk_widget_modify_bg(eventbox, GTK_STATE_NORMAL, &lbrown);
+					gtk_widget_override_background_color(eventbox, GTK_STATE_NORMAL, &lbrown);
 					oddCol = 1;
 				}
 			}
@@ -178,7 +178,7 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 	if (event->type == GDK_BUTTON_PRESS)
 	{
 		if (!clicks) {
-			gtk_widget_modify_bg(ebox, GTK_STATE_NORMAL, &green);
+			gtk_widget_override_background_color(ebox, GTK_STATE_NORMAL, &green);
 			/*get coordinates of eventbox*/
       //gtk_grid_get_child_at(GTK_GRID(ebox), &left, &top);
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
@@ -209,10 +209,10 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
 				/*odd square, lightbrown color*/
-				gtk_widget_modify_bg(prevEventbox, GTK_STATE_NORMAL, &dbrown);
+				gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
 			} else {
 				/*even square, darkbrown color*/
-				gtk_widget_modify_bg(prevEventbox, GTK_STATE_NORMAL, &lbrown);
+				gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &lbrown);
 			}
 			int u = guiMove(player, move, board);
 			if (!u) {
