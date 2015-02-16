@@ -347,6 +347,7 @@ void printVelcome(void) {
 
 }
 
+#ifdef GUI
 int guiMove(int player, int *move, int board[][8])
 {
 	if (checkInput(move)) {
@@ -358,32 +359,31 @@ int guiMove(int player, int *move, int board[][8])
 	} 
 	return 1;
 }
-/* for use with out gui
-*/
-//int main(void) {
-//	int playing = 1;
-//	int input;
-//	char *p;
-//	int move[4];
-//	int white = 0;
-//	int black = 1;
-//	int board[8][8];	
-//	int i,j;
-//
-//	initBoard(board);
-//	printBoard(board);
-//	
-//	while (playing) {
-//		/*0 is white 1 is black*/
-//		while (getInput(white, move, board)) {
-//			/*get input from white, also checks if the input is correct format and a valid move*/
-//			printf("wait\n");
-//		}
-//		printBoard(board);
-//		while (getInput(black, move, board)) {
-//			printf("wait\n");
-//		}
-//		printBoard(board);
-//	}
-//	return 0;
-//}
+#endif
+
+#ifdef CLI
+int main(void) {
+	int playing = 1;
+	int move[4];
+	int white = 0;
+	int black = 1;
+	int board[8][8];	
+
+	initBoard(board);
+	printBoard(board);
+	
+	while (playing) {
+		/*0 is white 1 is black*/
+		while (getInput(white, move, board)) {
+			/*get input from white, also checks if the input is correct format and a valid move*/
+			printf("wait\n");
+		}
+		printBoard(board);
+		while (getInput(black, move, board)) {
+			printf("wait\n");
+		}
+		printBoard(board);
+	}
+	return 0;
+}
+#endif
