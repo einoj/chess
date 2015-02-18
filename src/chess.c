@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include "letterToInt.h"
 extern int rook(int pos[], int board[][8]);
 extern int knight(int pos[], int board[][8]);
 extern int bishop(int pos[], int board[][8]);
