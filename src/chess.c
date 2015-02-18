@@ -7,7 +7,7 @@ extern int bishop(int pos[], int board[][8]);
 extern int queen(int pos[], int board[][8]);
 extern int king(int pos[], int board[][8]);
 extern int pawn(int pos[], int player, int board[][8]);
-extern int makemove(int pos[], int board[][8]);
+extern int completemove(int pos[], int board[][8]);
 
 /*
 struct wChessPieces {
@@ -108,80 +108,6 @@ int checkPassant(int row,int column, int player) {
 	}
 }
 
-void printBoard(int tmpBoard[][8]) {
-	/*print out the current board and pieces*/
-	int i, j;
-	/*print top edge*/
-	printf(" _________________________\n");
-	/*count down so white is south black is north*/
-	for (i = 0; i < 8; ++i) {
-		/*print edge of board*/
-		printf("%d|", 8-i);
-		for (j = 0; j < 8; ++j) {
-			if (tmpBoard[i][j] == 1) {
-				/*white pawn*/
-				printf("wP|");
-			}
-			else if (tmpBoard[i][j] == 7) {
-				/*black pawn*/
-				printf("bP|");
-			}
-			else if (tmpBoard[i][j] == 2) {
-				/*white knight*/
-				printf("wN|");
-			}
-			else if (tmpBoard[i][j] == 8) {
-				/*black knight*/
-				printf("bN|");
-			}
-			else if (tmpBoard[i][j] == 3) {
-				/*white bishop*/
-				printf("wB|");
-			}
-			else if (tmpBoard[i][j] == 9) {
-				/*black knight*/
-				printf("bB|");
-			}
-			else if (tmpBoard[i][j] == 4) {
-				/*white Rook*/
-				printf("wR|");
-			}
-			else if (tmpBoard[i][j] == 10) {
-				/*black Rook*/
-				printf("bR|");
-			}
-			else if (tmpBoard[i][j] == 5) {
-				/*white Queen*/
-				printf("wQ|");
-			}
-			else if (tmpBoard[i][j] == 11) {
-				/*black Queen*/
-				printf("bQ|");
-			}
-			else if (tmpBoard[i][j] == 6) {
-				/*white King*/
-				printf("wK|");
-			}
-			else if (tmpBoard[i][j] == 12) {
-				/*black King*/
-				printf("bK|");
-			}
-			else {
-				/*empty square*/
-				printf("  |");
-			}
-		}
-		/*new row*/
-		if (i > 0) {
-			printf("\n -------------------------\n");
-		}
-		else {
-			printf("\n _________________________\n");
-		}
-	}
-	/*print bottom row*/
-	printf("   a  b  c  d  e  f  g  h \n");	
-}
 
 int checkColor(int move[], int player, int b[][8]) {
 	/*[0] = curCol, [1] curRow, [2] nexCol, [3] nexRow*/
@@ -211,8 +137,8 @@ int checkMove(int input[], int player, int board[][8]) {
 		if (tmp == 1) {
             /*The move is also made if pawn() returns 2*/
             /*some extraprocessing is needed and therfore pawn makes the move itself*/
-            /*This is because of how pawn always called makemove before*/
-            makemove(input, board);
+            /*This is because of how pawn always called complete before*/
+            completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -229,7 +155,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 2 || piece == 8) {
 		/*piece is a knight*/
 		if (knight(input, board)) {
-            makemove(input, board);
+            completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -241,7 +167,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 3 || piece == 9) {
 		/*piece is a bishop*/
 		if (bishop(input, board)) {
-            makemove(input, board);
+            completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -253,7 +179,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 4 || piece == 10) {
 		/*piece is a rook*/
 		if (rook(input, board)) {
-            makemove(input, board);
+            completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -265,7 +191,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 5 || piece == 11) {
 		/*piece is a queen*/
 		if (queen(input, board)) {
-            makemove(input, board);
+            completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
@@ -277,7 +203,7 @@ int checkMove(int input[], int player, int board[][8]) {
 	else if (piece == 6 || piece == 12) {
 		/*piece is a king*/
 		if (king(input, board)) {
-            makemove(input, board);
+            completemove(input, board);
 			/*move complteded*/
 			return 1;
 		}
@@ -308,47 +234,7 @@ int checkInput(int input[]) {
 	return 0;
 }
 
-int getInput(int player, int move[], int b[][8]) {
-	char input[10];
-	/*get input from player*/
-	if(player) {
-		/* player = 1 black player*/
-		printf("black's move: ");
-	}
-	else {
-		/* player = 0 white player*/
-		printf("white's move: ");
-	}
-	fgets(input, 8, stdin);
-
-	move[0] = ltoi(input[0]);
-	move[1] = ltoi(input[1]);
-	move[2] = ltoi(input[2]);
-	move[3] = ltoi(input[3]);
-	printf("Move: %i %i %i %i\n", move[0], move[1], move[2], move[3]);
-	/*check if the input is coordinates on the board*/
-	if (checkInput(move)) {
-		/*input is on the board*/
-		if (checkColor(move, player, b)) {
-			/*check if white player moves white piece attacking black piece or empty space vica versa*/
-			if (checkMove(move, player, b)) {
-				printf("Move made\n");
-				return 0;
-			}
-		}
-	}
-    /*wrong input given*/
-    printf("new Move\n");
-    return 1;
-}
-
-
-void printVelcome(void) {
-
-}
-
-#ifdef GUI
-int guiMove(int player, int *move, int board[][8])
+int makemove(int player, int *move, int board[][8])
 {
 	if (checkInput(move)) {
 		if (checkColor(move, player, board)) {
@@ -359,31 +245,3 @@ int guiMove(int player, int *move, int board[][8])
 	} 
 	return 1;
 }
-#endif
-
-#ifdef CLI
-int main(void) {
-	int playing = 1;
-	int move[4];
-	int white = 0;
-	int black = 1;
-	int board[8][8];	
-
-	initBoard(board);
-	printBoard(board);
-	
-	while (playing) {
-		/*0 is white 1 is black*/
-		while (getInput(white, move, board)) {
-			/*get input from white, also checks if the input is correct format and a valid move*/
-			printf("wait\n");
-		}
-		printBoard(board);
-		while (getInput(black, move, board)) {
-			printf("wait\n");
-		}
-		printBoard(board);
-	}
-	return 0;
-}
-#endif

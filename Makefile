@@ -8,14 +8,15 @@ LDFLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0`
 
 SRCS    = $(wildcard $(SRCDIR)/*.c)
 OBJS		= $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
+GUIOBJS = $(filter-out $(OBJDIR)/chessCLI.o,$(OBJS))
 CLIOBJS = $(filter-out $(OBJDIR)/chessGUI.o $(OBJDIR)/chess.o,$(OBJS))
 CLIOBJS += $(CLIDIR)/chess.o
 
 all: chessGUI chessCLI
 
 chessGUI: CFLAGS += -DGUI
-chessGUI: $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o chessGUI $(LDFLAGS)
+chessGUI: $(GUIOBJS)
+	$(CC) $(CFLAGS) $(GUIOBJS) -o chessGUI $(LDFLAGS)
 
 chessCLI: CFLAGS := -DCLI
 chessCLI: $(CLIOBJS) 

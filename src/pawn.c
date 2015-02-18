@@ -1,5 +1,5 @@
 extern int checkPosition(int row, int col, int b[][8]);
-extern void makemove(int pos[], int b[][8]);
+extern void completemove(int pos[], int b[][8]);
 extern void setPassant(int column, int player);
 extern int checkPassant(int row, int column, int player);
 
@@ -54,10 +54,10 @@ int pawn(int pos[], int player, int board[][8]) {
 			/*Move two steps north*/
 			if (!checkPosition(pos[3], pos[2], board) && !checkPosition(pos[3]-1, pos[2], board) && (pos[1] == 1 || pos[1] == 6)) {
 				/*No piece at new position, middle position, and not moved, therfore move is leagal*/
-				makemove(pos, board);
+				completemove(pos, board);
 				/*set the previous collumn position to the 
 				* pessant array. This is done after the move is made
-				* because makemove resets the pessant arrays.*/
+				* because completemove resets the pessant arrays.*/
 				setPassant(pos[0],player);
 				return 2;
 			}
@@ -121,10 +121,10 @@ int pawn(int pos[], int player, int board[][8]) {
 			/*Move two steps south*/
 			if (!checkPosition(pos[3], pos[2], board) && !checkPosition(pos[3]+1, pos[2], board) && (pos[1] == 1 || pos[1] == 6)) {
 				/*No piece at new position, middle position, and not moved, therfore move is leagal*/
-				makemove(pos, board);
+				completemove(pos, board);
 				/*set the previous collumn position to the 
 				* pessant array. This is done after the move is made
-				* because makemove resets the pessant arrays.*/
+				* because completemove resets the pessant arrays.*/
 				setPassant(pos[0],player);
 				return 2;
 			}

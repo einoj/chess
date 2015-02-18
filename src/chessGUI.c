@@ -13,7 +13,7 @@ GtkLabel *currentPlayer;
 int move[4];
 int board[8][8];
 
-extern int guiMove(int player, int *move, int board[][8]);
+extern int makemove(int player, int *move, int board[][8]);
 /*initBoard method is in chess.c*/
 extern void initBoard(int tmpBoard[][8]);
 extern void resetPassantArrays(void);
@@ -215,7 +215,7 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 				/*even square, darkbrown color*/
 				gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &lbrown);
 			}
-			int u = guiMove(player, move, board);
+			int u = makemove(player, move, board);
 			if (!u) {
 				drawGuiBoard(labelBoard, board);	
 				player = !player; /*next players turn*/
