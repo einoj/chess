@@ -73,7 +73,7 @@ int main (int argc, char *argv[])
 			}
 			gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox),FALSE);
 			gtk_widget_override_font((GtkWidget *) label, pango_font_description_from_string(
-									"Serif 26"));
+									"Serif 36"));
 			/*put label into eventbox*/
 			gtk_container_add(GTK_CONTAINER (eventbox), (GtkWidget *) label);
 			/*put eventbox into table*/
