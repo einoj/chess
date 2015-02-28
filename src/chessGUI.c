@@ -32,18 +32,17 @@ int main (int argc, char *argv[])
 	gtk_widget_set_size_request(window, 680,350);
 	//table = gtk_grid_new (8,8,TRUE);
 	table = gtk_grid_new ();
-    /*container for the labels of the gui board*/
-    GtkLabel *labelBoard[8][8];
+  /*container for the labels of the gui board*/
+  GtkLabel *labelBoard[8][8];
 	/*one is larger to make the squares wider*/	
 	char *pieces[64] = { "♜", "♞", "♝","♛","♚","♝","♞","♜",
 						 "♟", "♟", "♟","♟","♟","♟","♟","♟",
-						 "    ", "    ", "    ","    ","    ","    ","    ","    ",
-						 "    ", "    ", "    ","    ","    ","    ","    ","    ",
-						 "    ", "    ", "    ","    ","    ","    ","    ","    ",
-						 "    ", "    ", "    ","    ","    ","    ","    ","    ",
+						 "", "", "", "", "", "", "", "",
+						 "", "", "", "", "", "", "", "",
+						 "", "", "", "", "", "", "", "",
+						 "", "", "", "", "", "", "", "",
 						 "♙", "♙", "♙","♙","♙","♙","♙","♙",
 						 "♖", "♘", "♗","♕","♔","♗","♘","♖"};
-
 	int i,j;
 	int p = 0;
 	int oddCol = 1;
@@ -51,6 +50,8 @@ int main (int argc, char *argv[])
 	for (i = 0; i < 8; i ++) {
 		for (j = 0; j < 8; j++) {
 			label = (GtkLabel *) gtk_label_new(pieces[p]);
+      /* set the size of the label to avoid that they are resized when there is no piece in the row */
+      gtk_widget_set_size_request((GtkWidget *) label, 56, 56);
 			/*put the label into the container for easy access when mocing pieces*/
 			labelBoard[i][j]=label;
 			eventbox = gtk_event_box_new();
@@ -71,14 +72,14 @@ int main (int argc, char *argv[])
 					oddCol = 1;
 				}
 			}
+
 			gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox),FALSE);
 			gtk_widget_override_font((GtkWidget *) label, pango_font_description_from_string(
-									"Serif 36"));
+									"Serif 26"));
 			/*put label into eventbox*/
 			gtk_container_add(GTK_CONTAINER (eventbox), (GtkWidget *) label);
 			/*put eventbox into table*/
       gtk_grid_attach((GtkGrid *) table, eventbox,j,i,1,1);
-      
 
 
 			g_signal_connect(G_OBJECT (eventbox), "button_press_event",
@@ -157,7 +158,7 @@ char *convertClipieceToGuiPiece(int cliPiece){
 	else if (cliPiece == 12) {
 		return "♚";
 	} else {
-		return "    ";
+		return "";
 	}
 
 }
