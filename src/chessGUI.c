@@ -9,7 +9,9 @@ static const GdkRGBA lbrown = {0.9805, 0.8047, 0.6094, 1};
 GdkColor prevColor;
 int clicks = 0;
 int player = 0;
-GtkWidget *table, *prevEventbox, *hpane;
+GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
+GtkTextBuffer *buffer;
+GtkTextIter txtiter;
 GtkLabel *currentPlayer;
 int move[4];
 int board[8][8];
@@ -103,9 +105,33 @@ int main (int argc, char *argv[])
 	hpane = gtk_grid_new();
 	/*add the table to the horizontal pane*/
   gtk_grid_attach((GtkGrid *) hpane, table, 0, 0, 1,1);
-	/*add game info to the horizontal pane*/
-	currentPlayer = (GtkLabel *) gtk_label_new("Current player:\nWhite");
-  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) currentPlayer,1,0,1,1);
+
+  /* create a vertical grid containing game info.
+   * the first  widget is shows the current player
+   * and the second widget is a textview showing last moves
+   */
+  infogrid = gtk_grid_new();
+  textview = gtk_text_view_new();
+  gtk_text_view_set_editable(GTK_TEXT_VIEW(textview), FALSE);
+  gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (textview), FALSE);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (textview), GTK_WRAP_WORD);
+  buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
+  gtk_text_view_set_left_margin (GTK_TEXT_VIEW (textview), 10);
+  gtk_text_view_set_right_margin (GTK_TEXT_VIEW (textview), 10);
+  gtk_text_buffer_set_text(buffer, "Status text!", -1);
+
+	/*add game info textview to the scroll window 
+   * and the scroll window and current player label to infogrid.
+   * Finally add the info grid to the hpane, right of the chess board.*/
+  scroll_win = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_size_request(scroll_win, 250,432);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll_win),
+  GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+  gtk_container_add(GTK_CONTAINER (scroll_win), textview);
+  gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) scroll_win,0,1,1,1);
+	currentPlayer = (GtkLabel *) gtk_label_new("Current player: White");
+  gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) currentPlayer,0,0,1,1);
+  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) infogrid, 1,0,1,1);
 
 
 	/*add table to window*/
@@ -118,7 +144,8 @@ int main (int argc, char *argv[])
 }
 
 
-int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8]) {
+int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
+{
 		int i, j;
 		for (i = 0; i < 8; i++) {
 			for (j = 0; j < 8; j++) {
@@ -138,7 +165,6 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 		if (!clicks) {
 			gtk_widget_override_background_color(ebox, GTK_STATE_NORMAL, &green);
 			/*get coordinates of eventbox*/
-      //gtk_grid_get_child_at(GTK_GRID(ebox), &left, &top);
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach", &left,
 					"top-attach",&top,
@@ -154,7 +180,6 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			clicks = 1;
 		} else {
 			/*make move*/
-      //gtk_grid_get_child_at(GTK_GRID(ebox), &left, &top);
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach",  &left,
 					"top-attach",   &top,
@@ -174,12 +199,18 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			}
 			int u = makemove(player, move, board);
 			if (!u) {
+        /* Update the GUI board */
 				drawGuiBoard(labelBoard, board);	
-				player = !player; /*next players turn*/
+        /* Update the game info */
+        buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
+        gtk_text_buffer_get_end_iter(buffer, &txtiter);
+        gtk_text_buffer_insert(buffer, &txtiter, "Made a move!", -1);
+
+				player = !player; 
 				if (player) {
-					gtk_label_set_text(currentPlayer, "Current player:\nBlack");
+					gtk_label_set_text(currentPlayer, "Current player: Black");
 				} else {
-					gtk_label_set_text(currentPlayer, "Current player:\nWhite");
+					gtk_label_set_text(currentPlayer, "Current player: White");
 				}
 			}
 			clicks = 0;
