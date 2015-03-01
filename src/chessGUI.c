@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "int2utf8.h"
 
 static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
@@ -13,8 +14,11 @@ GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
 GtkTextBuffer *buffer;
 GtkTextIter txtiter;
 GtkLabel *currentPlayer;
-int move[4];
+char note[5];
+char mnum[11]; // max int size is 10 chars long + 0 char
+int move[4]; //src row col; dest row col 
 int board[8][8];
+int movecnt = 0;
 
 extern int makemove(int player, int *move, int board[][8]);
 /*initBoard method is in chess.c*/
@@ -118,7 +122,6 @@ int main (int argc, char *argv[])
   buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
   gtk_text_view_set_left_margin (GTK_TEXT_VIEW (textview), 10);
   gtk_text_view_set_right_margin (GTK_TEXT_VIEW (textview), 10);
-  gtk_text_buffer_set_text(buffer, "Status text!", -1);
 
 	/*add game info textview to the scroll window 
    * and the scroll window and current player label to infogrid.
@@ -153,6 +156,32 @@ int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
 			}
 		}
 		return 0;
+}
+
+void algebraic_notation(char *note, int *move, int board[][8])
+{
+  int piece = board[move[1]][move[0]];
+  note[0] = ' ';
+  if (piece == 2 || piece == 8) {
+    note[1] = 'N';
+  } else if (piece == 3 || piece == 9) {
+    note[1] = 'B';
+  } else if (piece == 4 || piece == 10) {
+    note[1] = 'R';
+  } else if (piece == 5 || piece == 11) {
+    note[1] = 'Q';
+  } else if (piece == 6 || piece == 12) {
+    note[1] = 'K';
+  } 
+  note[2] = move[3] + 97;
+  note[3] = move[2] + 48;
+  note[4] = 0;
+
+  if (piece == 1 || piece == 7) {
+    note[1] = move[3] + 97;
+    note[2] = move[2] + 48;
+    note[3] = 0;
+  }
 }
 
 static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
@@ -197,14 +226,21 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 				/*even square, darkbrown color*/
 				gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &lbrown);
 			}
+      algebraic_notation(note, move, board);
 			int u = makemove(player, move, board);
 			if (!u) {
+        buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
+        gtk_text_buffer_get_end_iter(buffer, &txtiter);
+        if (!player) {
+          itoa(++movecnt,mnum,11);
+          gtk_text_buffer_insert(buffer, &txtiter, " ", -1);
+          gtk_text_buffer_insert(buffer, &txtiter, mnum, -1);
+          gtk_text_buffer_insert(buffer, &txtiter, ".", -1);
+        }
         /* Update the GUI board */
 				drawGuiBoard(labelBoard, board);	
         /* Update the game info */
-        buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
-        gtk_text_buffer_get_end_iter(buffer, &txtiter);
-        gtk_text_buffer_insert(buffer, &txtiter, "Made a move!", -1);
+        gtk_text_buffer_insert(buffer, &txtiter, note, -1);
 
 				player = !player; 
 				if (player) {
