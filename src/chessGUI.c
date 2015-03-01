@@ -13,7 +13,8 @@ int player = 0;
 GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
 GtkTextBuffer *buffer;
 GtkTextIter txtiter;
-GtkLabel *currentPlayer;
+GtkLabel *currentPlayer, *row_label, *col_label;
+
 char note[5];
 char mnum[11]; // max int size is 10 chars long + 0 char
 int move[4]; //src row col; dest row col 
@@ -40,7 +41,7 @@ int main (int argc, char *argv[])
 	//table = gtk_grid_new (8,8,TRUE);
 	table = gtk_grid_new ();
   /*container for the labels of the gui board*/
-  GtkLabel *labelBoard[8][8];
+  GtkLabel *labelBoard[9][8];
 	/*one is larger to make the squares wider*/	
 	char *pieces[64] = { "♜", "♞", "♝","♛","♚","♝","♞","♜",
 						 "♟", "♟", "♟","♟","♟","♟","♟","♟",
@@ -54,7 +55,7 @@ int main (int argc, char *argv[])
 	int p = 0;
 	int oddCol = 1;
 	int oddRow = 1;
-	for (i = 0; i < 8; i ++) {
+	for (i = 1; i < 9; i ++) {
 		for (j = 0; j < 8; j++) {
 			label = (GtkLabel *) gtk_label_new(pieces[p]);
       /* set the size of the label to avoid that they are resized when there is no piece in the row */
@@ -103,12 +104,21 @@ int main (int argc, char *argv[])
 		}
 		oddRow = !oddRow;
 	}
+  /* add square row names */
+  gtk_widget_override_font((GtkWidget *) label, pango_font_description_from_string("Serif 16"));
+  for (j = 8; j > 0; j--) {
+    itoa(j,mnum,11);
+	  label = (GtkLabel *) gtk_label_new(mnum);
+    gtk_widget_set_size_request((GtkWidget *) label, 56, 56);
+    labelBoard[0][j] = label;
+    gtk_grid_attach((GtkGrid *) table,(GtkWidget *) label,j,0,1,1);
+  }
 
 	/*make a horizontal pane*/
 	//hpane = gtk_grid_new(1,2,TRUE);
 	hpane = gtk_grid_new();
 	/*add the table to the horizontal pane*/
-  gtk_grid_attach((GtkGrid *) hpane, table, 0, 0, 1,1);
+  gtk_grid_attach((GtkGrid *) hpane, table, 1, 0, 1,1);
 
   /* create a vertical grid containing game info.
    * the first  widget is shows the current player
@@ -134,7 +144,12 @@ int main (int argc, char *argv[])
   gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) scroll_win,0,1,1,1);
 	currentPlayer = (GtkLabel *) gtk_label_new("Current player: White");
   gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) currentPlayer,0,0,1,1);
-  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) infogrid, 1,0,1,1);
+  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) infogrid, 2,0,1,1);
+
+  /* Add square names */
+	col_label = (GtkLabel *) gtk_label_new("a         b         c         d         e         f         g          h");
+  gtk_widget_override_font((GtkWidget *) row_label, pango_font_description_from_string("Serif 16"));
+  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) col_label, 1,1,1,1);
 
 
 	/*add table to window*/
