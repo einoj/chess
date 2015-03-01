@@ -1,6 +1,5 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include "int2utf8.h"
 
 static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
@@ -41,7 +40,7 @@ int main (int argc, char *argv[])
 	//table = gtk_grid_new (8,8,TRUE);
 	table = gtk_grid_new ();
   /*container for the labels of the gui board*/
-  GtkLabel *labelBoard[9][8];
+  GtkLabel *labelBoard[8][8];
 	/*one is larger to make the squares wider*/	
 	char *pieces[64] = { "♜", "♞", "♝","♛","♚","♝","♞","♜",
 						 "♟", "♟", "♟","♟","♟","♟","♟","♟",
@@ -55,7 +54,7 @@ int main (int argc, char *argv[])
 	int p = 0;
 	int oddCol = 1;
 	int oddRow = 1;
-	for (i = 1; i < 9; i ++) {
+	for (i = 0; i < 8; i ++) {
 		for (j = 0; j < 8; j++) {
 			label = (GtkLabel *) gtk_label_new(pieces[p]);
       /* set the size of the label to avoid that they are resized when there is no piece in the row */
@@ -87,7 +86,7 @@ int main (int argc, char *argv[])
 			/*put label into eventbox*/
 			gtk_container_add(GTK_CONTAINER (eventbox), (GtkWidget *) label);
 			/*put eventbox into table*/
-      gtk_grid_attach((GtkGrid *) table, eventbox,j,i,1,1);
+      gtk_grid_attach((GtkGrid *) table, eventbox,j+1,i,1,1);
 
 
 			g_signal_connect(G_OBJECT (eventbox), "button_press_event",
@@ -104,21 +103,29 @@ int main (int argc, char *argv[])
 		}
 		oddRow = !oddRow;
 	}
+
   /* add square row names */
   gtk_widget_override_font((GtkWidget *) label, pango_font_description_from_string("Serif 16"));
-  for (j = 8; j > 0; j--) {
-    itoa(j,mnum,11);
+  sprintf(mnum,"%s","`");
+  for (i = 1; i < 9; i++) {
+    mnum[0]++; // mnums first char becomes 'a', then 'b', then 'c' etc.
 	  label = (GtkLabel *) gtk_label_new(mnum);
-    gtk_widget_set_size_request((GtkWidget *) label, 56, 56);
-    labelBoard[0][j] = label;
-    gtk_grid_attach((GtkGrid *) table,(GtkWidget *) label,j,0,1,1);
+    gtk_widget_set_size_request((GtkWidget *) label, 0, 30);
+    gtk_grid_attach((GtkGrid *) table,(GtkWidget *) label,i,9,1,1);
+  }
+  i = 8;
+  for (j = 0; j < 8; j++) {
+    sprintf(mnum,"%d",i--);
+	  label = (GtkLabel *) gtk_label_new(mnum);
+    gtk_widget_set_size_request((GtkWidget *) label, 30, 0);
+    gtk_grid_attach((GtkGrid *) table,(GtkWidget *) label,0,j,1,1);
   }
 
 	/*make a horizontal pane*/
 	//hpane = gtk_grid_new(1,2,TRUE);
 	hpane = gtk_grid_new();
 	/*add the table to the horizontal pane*/
-  gtk_grid_attach((GtkGrid *) hpane, table, 1, 0, 1,1);
+  gtk_grid_attach((GtkGrid *) hpane, table, 0, 0, 1,1);
 
   /* create a vertical grid containing game info.
    * the first  widget is shows the current player
@@ -137,19 +144,15 @@ int main (int argc, char *argv[])
    * and the scroll window and current player label to infogrid.
    * Finally add the info grid to the hpane, right of the chess board.*/
   scroll_win = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_set_size_request(scroll_win, 250,432);
+  gtk_widget_set_size_request(scroll_win, 250,415);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll_win),
   GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
   gtk_container_add(GTK_CONTAINER (scroll_win), textview);
   gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) scroll_win,0,1,1,1);
 	currentPlayer = (GtkLabel *) gtk_label_new("Current player: White");
   gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) currentPlayer,0,0,1,1);
-  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) infogrid, 2,0,1,1);
+  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) infogrid, 1,0,1,1);
 
-  /* Add square names */
-	col_label = (GtkLabel *) gtk_label_new("a         b         c         d         e         f         g          h");
-  gtk_widget_override_font((GtkWidget *) row_label, pango_font_description_from_string("Serif 16"));
-  gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) col_label, 1,1,1,1);
 
 
 	/*add table to window*/
@@ -216,7 +219,8 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 					"height",&height,
 					NULL);
       //store the position you move from. It will be used to move the pieces in the board array
-      move[0] = left;
+      // subtract 1 from left because the row numbers are part of the label table
+      move[0] = left-1;
       move[1] = top;
 			/*save label*/
 			prevEventbox = ebox;
@@ -231,7 +235,8 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 					"height",&height,
 					NULL);
       //store the position you move to. It will be used to move the pieces in the board array
-      move[2] = left;
+      // subtract 1 from left because the row numbers are part of the label table
+      move[2] = left-1;
       move[3] = top;
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
@@ -247,7 +252,7 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
         buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
         gtk_text_buffer_get_end_iter(buffer, &txtiter);
         if (!player) {
-          itoa(++movecnt,mnum,11);
+          sprintf(mnum,"%d",++movecnt);
           gtk_text_buffer_insert(buffer, &txtiter, " ", -1);
           gtk_text_buffer_insert(buffer, &txtiter, mnum, -1);
           gtk_text_buffer_insert(buffer, &txtiter, ".", -1);
