@@ -1,0 +1,7 @@
+* TODO add menu.
+** [ ] option for choosing color.
+** [ ] option for choosing size of board.
+** [ ] save/load functonality.
+* TODO add posibility of loading file with algebraic notation.
+* TODO Write check for king being under attack.
+** TODO Write check for checkmate.
