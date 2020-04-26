@@ -5,4 +5,4 @@ This project was started when I took my first C course. I started wirintg the GU
 The quality of the code reflects this.
 
 Below is a picture of the GUI version in play
-![Chess GUI](http://oltedal.org/chessGUI.png)
+![Chess GUI](/images/chess.png)
