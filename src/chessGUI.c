@@ -3,9 +3,6 @@
 #include "int2utf8.h"
 
 static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
-static const GdkRGBA green  = {0.5899, 0.8867, 0.3906, 1};
-static const GdkRGBA dbrown = {0.8242, 0.5508, 0.2773, 1};
-static const GdkRGBA lbrown = {0.9805, 0.8047, 0.6094, 1};
 GdkColor prevColor;
 int clicks = 0;
 int player = 0;
@@ -39,6 +36,15 @@ int main (int argc, char *argv[])
 	gtk_widget_set_size_request(window, 680,350);
 	//table = gtk_grid_new (8,8,TRUE);
 	table = gtk_grid_new ();
+  GtkStyleContext *context;
+  GtkCssProvider *provider = gtk_css_provider_new ();
+  gtk_css_provider_load_from_path (provider,
+    "style/chessGUI.css", NULL);
+  context = gtk_widget_get_style_context (table);
+  gtk_style_context_add_provider (context,
+                                            GTK_STYLE_PROVIDER(provider),
+                                            GTK_STYLE_PROVIDER_PRIORITY_USER);
+
   /*container for the labels of the gui board*/
   GtkLabel *labelBoard[8][8];
 	/*one is larger to make the squares wider*/	
@@ -62,27 +68,29 @@ int main (int argc, char *argv[])
 			/*put the label into the container for easy access when mocing pieces*/
 			labelBoard[i][j]=label;
 			eventbox = gtk_event_box_new();
+            context = gtk_widget_get_style_context (eventbox);
+                    gtk_style_context_add_provider (context,
+                                            GTK_STYLE_PROVIDER(provider),
+                                            GTK_STYLE_PROVIDER_PRIORITY_USER);
 			if (oddRow) {
 				if (oddCol) {
-					gtk_widget_override_background_color(eventbox, GTK_STATE_NORMAL, &lbrown);
+                    gtk_widget_set_name (eventbox, "lightbrown");
 					oddCol = 0;
 				} else {
-					gtk_widget_override_background_color(eventbox, GTK_STATE_NORMAL, &dbrown);
+                    gtk_widget_set_name (eventbox, "darkbrown");
 					oddCol = 1;
 				}
 			} else {
 				if (oddCol) {
-					gtk_widget_override_background_color(eventbox, GTK_STATE_NORMAL, &dbrown);
+                    gtk_widget_set_name (eventbox, "darkbrown");
 					oddCol = 0;
 				} else {
-					gtk_widget_override_background_color(eventbox, GTK_STATE_NORMAL, &lbrown);
+                    gtk_widget_set_name (eventbox, "lightbrown");
 					oddCol = 1;
 				}
 			}
 
 			gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox),FALSE);
-			gtk_widget_override_font((GtkWidget *) label, pango_font_description_from_string(
-									"Serif 26"));
 			/*put label into eventbox*/
 			gtk_container_add(GTK_CONTAINER (eventbox), (GtkWidget *) label);
 			/*put eventbox into table*/
@@ -103,9 +111,7 @@ int main (int argc, char *argv[])
 		}
 		oddRow = !oddRow;
 	}
-
   /* add square row names */
-  gtk_widget_override_font((GtkWidget *) label, pango_font_description_from_string("Serif 16"));
   sprintf(mnum,"%s","`");
   for (i = 1; i < 9; i++) {
     mnum[0]++; // mnums first char becomes 'a', then 'b', then 'c' etc.
@@ -205,12 +211,13 @@ void algebraic_notation(char *note, int *move, int board[][8])
 static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			GtkLabel *labelBoard[][8])
 {
+   // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
 	unsigned left, top, width, height;
 
 	if (event->type == GDK_BUTTON_PRESS)
 	{
 		if (!clicks) {
-			gtk_widget_override_background_color(ebox, GTK_STATE_NORMAL, &green);
+            gtk_widget_set_name (ebox, "selected");
 			/*get coordinates of eventbox*/
 			gtk_container_child_get(GTK_CONTAINER(table), ebox,
 					"left-attach", &left,
@@ -240,11 +247,12 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
       move[3] = top;
 			/*color back to normal*/
 			if ((move[0]+move[1])&1){
-				/*odd square, lightbrown color*/
-				gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
+				/*odd square, darkbrown color*/
+				//gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
+                gtk_widget_set_name (prevEventbox, "darkbrown"); 
 			} else {
-				/*even square, darkbrown color*/
-				gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &lbrown);
+				/*even square, lightbrown color*/
+                gtk_widget_set_name (prevEventbox, "lightbrown"); 
 			}
       algebraic_notation(note, move, board);
 			int u = makemove(player, move, board);
@@ -271,6 +279,6 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
 			}
 			clicks = 0;
 		}
-	}
+        }
 	return FALSE;
 }

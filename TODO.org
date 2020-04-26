@@ -5,7 +5,7 @@
 * TODO add posibility of loading file with algebraic notation.
 * TODO Write check for king being under attack.
 ** TODO Write check for checkmate.
-* TODO Get rid of GTK warnings 
-** TODO Update to using CSS for gtk3, since
+* DONE Get rid of GTK warnings 
+** DONE Update to using CSS for gtk3, since
 gtk_widget_override_background_color is depracted
 

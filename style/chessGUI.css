@@ -1,0 +1,16 @@
+#lightbrown {
+    background: #facd9b;
+    font-family: Serif;
+    font-size: 26px;
+}
+#darkbrown {
+    background: #d28c47;
+    font-family: Serif;
+    font-size: 26px;
+}
+#selected {
+    background: #96e264;
+    font-family: Serif;
+    font-size: 26px;
+}
+
