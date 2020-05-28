@@ -31,6 +31,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(wildcard $(INCDIR)/*.h) Makefile
 
 install: 
 	cp chessGUI $(DESTDIR)
+	cp -r style $(DESTDIR)
 
 clean:
 	rm -rf $(OBJDIR)
