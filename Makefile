@@ -29,5 +29,8 @@ $(OBJDIR)/chessGUI.o: $(SRCDIR)/chessGUI.c
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(wildcard $(INCDIR)/*.h) Makefile
 	$(CC) $(CFLAGS) $< -c -o $@
 
+install: 
+	cp chessGUI $(DESTDIR)
+
 clean:
 	rm -rf $(OBJDIR)
