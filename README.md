@@ -24,3 +24,9 @@ In addition to `libgtk-3-dev` the project needs `make` and `gcc` to build.
 # How to build
 
 Run `make` in the repository directory, this will produce two binaries. One commandline version of the game `chessCLI` and a GTK-3 GUI version `chessGUI`.
+
+## Windows
+
+For windows the mingw64 cross compiler is needed. Ubuntu does not have mingw64-gtk3 available
+so for building for windows I suggest using fedora, where it can be installed with
+`sudo dnf install mingw64-gtk3`. 
