@@ -7,7 +7,7 @@ This project was started when I took my first C course. I started wirintg the GU
 The quality of the code reflects this.
 
 Below is a screenshot of the GUI version in play
-![(Screenshot of Chess GUI)](/images/chess.png)
+![(Screenshot of Chess GUI running on windows 10)](/images/chess-under-windows10.png)
 
 # Dependencies
 
