@@ -25,9 +25,10 @@ struct bChessPieces {
 wChessPieces nodeW;
 */
 /*int board[8][8]; for use with cmd chess*/
-static int emptySquare = 0;
-static int wPawn=1, wKnight=2, wBishop=3, wRook=4, wQueen=5, wKing=6;
-static int bPawn=7, bKnight=8, bBishop=9, bRook=10, bQueen=11, bKing=12;
+enum pieces { emptySquare,
+    wPawn, wKnight, wBishop, wRook, wQueen, wKing,
+    bPawn, bKnight, bBishop, bRook, bQueen, bKing
+};
 int enPassantW[8], enPassantB[8];
 
 void initBoard(int tmpBoard[][8]){
