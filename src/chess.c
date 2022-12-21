@@ -126,17 +126,15 @@ int checkColor(int move[], int player, int b[][8]) {
 }
 
 int checkMove(int input[], int player, int board[][8]) {
-	/*convert char to int*/
 	/*get the piece at the given coordinate*/
 	int piece = board[input[1]][input[0]];
     /*hack for making 2 step pawn work*/
     int tmp;
-	if (piece == 1 || piece == 7) {
-		/*piece is a pawn*/
+	if (piece == wPawn || piece == bPawn) {
         tmp = pawn(input, player, board);
 		if (tmp == 1) {
             /*The move is also made if pawn() returns 2*/
-            /*some extraprocessing is needed and therfore pawn makes the move itself*/
+            /*some extra processing is needed and therefore pawn makes the move itself*/
             /*This is because of how pawn always called complete before*/
             completemove(input, board);
 			/*move completed*/
@@ -147,70 +145,53 @@ int checkMove(int input[], int player, int board[][8]) {
             /*two step move*/
             return 1;
         }
-		else {
-			/*invalid move*/
-			return 0;
-		}
+		/*invalid move*/
+		return 0;
 	}
-	else if (piece == 2 || piece == 8) {
-		/*piece is a knight*/
+	else if (piece == wKnight || piece == bKnight) {
 		if (knight(input, board)) {
             completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
-		else {
-			/*invalid move*/
-			return 0;
-		}
+		/*invalid move*/
+		return 0;
 	}
-	else if (piece == 3 || piece == 9) {
-		/*piece is a bishop*/
+	else if (piece == wBishop || piece == bBishop) {
 		if (bishop(input, board)) {
             completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
-		else {
-			/*invalid move*/
-			return 0;
-		}
+        /*invalid move*/
+        return 0;
 	}
-	else if (piece == 4 || piece == 10) {
-		/*piece is a rook*/
+	else if (piece == wRook || piece == bRook) {
 		if (rook(input, board)) {
             completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
-		else {
-			/*invalid move*/
-			return 0;
-		}
+        /*invalid move*/
+        return 0;
 	}
-	else if (piece == 5 || piece == 11) {
-		/*piece is a queen*/
+	else if (piece == wQueen || piece == bQueen) {
 		if (queen(input, board)) {
             completemove(input, board);
 			/*move completed*/
 			return 1;
 		}
-		else {
-			/*invalid move*/
-			return 0;
-		}
+        /*invalid move*/
+        return 0;
 	}
-	else if (piece == 6 || piece == 12) {
-		/*piece is a king*/
+	else if (piece == wKing || piece == bKing) {
 		if (king(input, board)) {
             completemove(input, board);
-			/*move complteded*/
+			/*move completed*/
 			return 1;
 		}
-		else {
-			/*invalid move*/
-			return 0;
-		}
+        /*invalid move*/
+        return 0;
 	}
     /* invalid move */
     return 0;
