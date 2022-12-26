@@ -46,8 +46,6 @@ int rook(struct Move mov, int board[][8]) {
 		/*reached new position*/
 		return 1;
 	}
-	else {
-		/*illeagal move*/
-		return 0;
-	}
+	/*illeagal move*/
+	return 0;
 }

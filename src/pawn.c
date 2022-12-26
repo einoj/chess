@@ -28,10 +28,8 @@ int pawn(struct Move mov, int player, int board[][8]) {
 				board[mov.nextRow-1][mov.nextCol] = 0;
 				return 1;
 			}
-			else {
-				/*illegal move*/
-				return 0;
-			}
+			/*illegal move*/
+			return 0;
 		}
 		else if (mov.nextRow == mov.currRow+1 && mov.nextCol == mov.currCol) {
 			/*Move one step north*/
@@ -40,10 +38,8 @@ int pawn(struct Move mov, int player, int board[][8]) {
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			}
-			else {
-				/*legal move*/
-				return 0;
-			}
+            /*legal move*/
+            return 0;
 		}
 		else if (mov.nextRow == mov.currRow+2 && mov.nextCol == mov.currCol) {
 			/*Move two steps north*/
@@ -56,18 +52,12 @@ int pawn(struct Move mov, int player, int board[][8]) {
 				setPassant(mov.currCol,player);
 				return 2;
 			}
-			else {
-				/*illegal move*/
-				return 0;
-			}
+            /*illegal move*/
+            return 0;
 		}
-		else {
-			/*illeagal move*/
-			return 0;
-		}
-	}
-
-	else {
+        /*illeagal move*/
+        return 0;
+	} else {
 		/*player is white*/
 		if (mov.nextRow == mov.currRow-1 && mov.nextCol == mov.currCol+1) {
 			/*move south east*/
@@ -95,10 +85,8 @@ int pawn(struct Move mov, int player, int board[][8]) {
 				board[mov.nextRow+1][mov.nextCol] = 0;
 				return 1;
 			}
-			else {
-				/*illegal move*/
-				return 0;
-			}
+            /*illegal move*/
+            return 0;
 		}
 		else if (mov.nextRow == mov.currRow-1 && mov.nextCol == mov.currCol) {
 			/*Move one step south*/
@@ -107,10 +95,8 @@ int pawn(struct Move mov, int player, int board[][8]) {
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			}
-			else {
-				/*illegal move*/
-				return 0;
-			}
+            /*illegal move*/
+            return 0;
 		}
 		else if (mov.nextRow == mov.currRow-2 && mov.nextCol == mov.currCol) {
 			/*Move two steps south*/
@@ -123,15 +109,11 @@ int pawn(struct Move mov, int player, int board[][8]) {
 				setPassant(mov.currCol,player);
 				return 2;
 			}
-			else {
-				/*illegal move*/
-				return 0;
-			}
+            /*illegal move*/
+            return 0;
 		}
-		else {
-			/*illeagal move*/
-			return 0;
-		}
+        /*illeagal move*/
+        return 0;
 	}
     /*illegal move*/
     return 0;

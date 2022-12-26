@@ -57,8 +57,6 @@ int king(struct Move mov, int board[][8]) {
 		}
 		return 0;
 	}
-	else {
-		/*illeagal move*/
-		return 0;
-	}
+	/*illeagal move*/
+	return 0;
 }

@@ -33,8 +33,6 @@ int knight(struct Move mov, int board[][8]) {
 		/*move 1 south 2 east*/
 		return 1;
 	}
-	else {
-		/*invalid move*/
-		return 0;
-	}
+	/*invalid move*/
+	return 0;
 }
