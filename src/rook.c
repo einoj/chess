@@ -1,13 +1,11 @@
 #include <chess.h>
 
-int rook(int pos[], int board[][8]) {
-	/*[col][row][col][row]*/
-	/*pos[] contains current possitions and new possitions [0][1]=current [2][3] = new*/
+int rook(struct Move mov, int board[][8]) {
 	int i;
-	if (pos[3] > pos[1] && pos[2] == pos[0]) {
+	if (mov.nextRow > mov.currRow && mov.nextCol == mov.currCol) {
 		/*move north*/
-		for(i = pos[1]+1; i < pos[3]; ++i) {
-			if (checkPosition(i,pos[0],board)) {
+		for(i = mov.currRow+1; i < mov.nextRow; ++i) {
+			if (checkPosition(i,mov.currCol,board)) {
 				/*if piece at intermediate possition move is illeagl*/
 				return 0;
 			}
@@ -15,10 +13,10 @@ int rook(int pos[], int board[][8]) {
 		/*reached new position*/
 		return 1;
 	}
-	else if (pos[3] == pos[1] && pos[2] < pos[0]) {
+	else if (mov.nextRow == mov.currRow && mov.nextCol < mov.currCol) {
 		/*west*/
-		for(i = pos[0]-1; i > pos[2]; --i) {
-			if (checkPosition(pos[1],i,board)) {
+		for(i = mov.currCol-1; i > mov.nextCol; --i) {
+			if (checkPosition(mov.currRow,i,board)) {
 				/*if piece at intermediate possition move is illeagl*/
 				return 0;
 			}
@@ -26,10 +24,10 @@ int rook(int pos[], int board[][8]) {
 		/*reached new position*/
 		return 1;
 	}
-	else if (pos[3] < pos[1] && pos[2] == pos[0]) {
+	else if (mov.nextRow < mov.currRow && mov.nextCol == mov.currCol) {
 		/*move south*/
-		for(i = pos[1]-1; i > pos[3]; --i) {
-			if (checkPosition(i,pos[0],board)) {
+		for(i = mov.currRow-1; i > mov.nextRow; --i) {
+			if (checkPosition(i,mov.currCol,board)) {
 				/*if piece at intermediate possition move is illeagl*/
 				return 0;
 			}
@@ -37,10 +35,10 @@ int rook(int pos[], int board[][8]) {
 		/*reached new position*/
 		return 1;
 	}
-	else if (pos[3] == pos[1] && pos[2] > pos[0]) {
+	else if (mov.nextRow == mov.currRow && mov.nextCol > mov.currCol) {
 		/*move east*/
-		for(i = pos[0]+1; i < pos[2]; ++i) {
-			if (checkPosition(pos[1],i,board)) {
+		for(i = mov.currCol+1; i < mov.nextCol; ++i) {
+			if (checkPosition(mov.currRow,i,board)) {
 				/*if piece at intermediate possition move is illeagl*/
 				return 0;
 			}

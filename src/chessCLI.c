@@ -77,7 +77,7 @@ void printBoard(int tmpBoard[][8]) {
 	printf("   a  b  c  d  e  f  g  h \n");	
 }
 
-void getInput(int player, int move[], int b[][8]) {
+void getInput(int player, struct Move *mov, int b[][8]) {
 	char input[10];
 	/*get input from player*/
 	if(player) {
@@ -90,15 +90,15 @@ void getInput(int player, int move[], int b[][8]) {
 	}
 	fgets(input, 8, stdin);
 
-	move[0] = ltoi(input[0]);
-	move[1] = ltoi(input[1]);
-	move[2] = ltoi(input[2]);
-	move[3] = ltoi(input[3]);
+	mov->currCol = ltoi(input[0]);
+	mov->currRow = ltoi(input[1]);
+	mov->nextCol = ltoi(input[2]);
+	mov->nextRow = ltoi(input[3]);
 }
 
 int main(void) {
 	int playing = 1;
-	int move[4];
+    struct Move mov;
 	int white = 0;
 	int black = 1;
 	int board[8][8];	
@@ -109,12 +109,12 @@ int main(void) {
 	while (playing) {
 		/*0 is white 1 is black*/
 		do {
-      getInput(white, move, board);
-		} while (makemove(white, move, board));
+      getInput(white, &mov, board);
+		} while (makemove(white, mov, board));
 		printBoard(board);
 		do {
-      getInput(black, move, board);
-		} while (makemove(black, move, board));
+      getInput(black, &mov, board);
+		} while (makemove(black, mov, board));
 		printBoard(board);
 	}
 	return 0;

@@ -103,12 +103,9 @@ int checkPassant(int row,int column, int player) {
 }
 
 
-int checkColor(int move[], int player, int b[][8]) {
-	/*[0] = curCol, [1] curRow, [2] nexCol, [3] nexRow*/
-	int colA = move[0];
-	int colB = move[2];
-	int aPiece = b[move[1]][colA];
-	int dPiece = b[move[3]][colB];
+int checkColor(struct Move mov, int player, int b[][8]) {
+	int aPiece = b[mov.currRow][mov.currCol];
+	int dPiece = b[mov.nextRow][mov.nextCol];
 	if (((player == 0) && ((aPiece > 0 && aPiece < 7) && ((dPiece > 6 && dPiece < 13) || (dPiece == 0)))) || ((player == 1) && ((aPiece > 6 && aPiece < 13) && ((dPiece > 0 && dPiece < 7) || (dPiece == 0))))) {
 		/* player is white and attacking piece is white, and defending piece is black or empty*/
 		/* or player is black and attacking piece is black, and defending piece is white or empty*/
@@ -119,18 +116,18 @@ int checkColor(int move[], int player, int b[][8]) {
 	}
 }
 
-int checkMove(int input[], int player, int board[][8]) {
+int checkMove(struct Move mov, int player, int board[][8]) {
 	/*get the piece at the given coordinate*/
-	int piece = board[input[1]][input[0]];
+	int piece = board[mov.currRow][mov.currCol];
     /*hack for making 2 step pawn work*/
     int tmp;
 	if (piece == wPawn || piece == bPawn) {
-        tmp = pawn(input, player, board);
+        tmp = pawn(mov, player, board);
 		if (tmp == 1) {
             /*The move is also made if pawn() returns 2*/
             /*some extra processing is needed and therefore pawn makes the move itself*/
             /*This is because of how pawn always called complete before*/
-            completemove(input, board);
+            completemove(mov, board);
 			/*move completed*/
 			return 1;
 		}
@@ -143,8 +140,8 @@ int checkMove(int input[], int player, int board[][8]) {
 		return 0;
 	}
 	else if (piece == wKnight || piece == bKnight) {
-		if (knight(input, board)) {
-            completemove(input, board);
+		if (knight(mov, board)) {
+            completemove(mov, board);
 			/*move completed*/
 			return 1;
 		}
@@ -152,8 +149,8 @@ int checkMove(int input[], int player, int board[][8]) {
 		return 0;
 	}
 	else if (piece == wBishop || piece == bBishop) {
-		if (bishop(input, board)) {
-            completemove(input, board);
+		if (bishop(mov, board)) {
+            completemove(mov, board);
 			/*move completed*/
 			return 1;
 		}
@@ -161,8 +158,8 @@ int checkMove(int input[], int player, int board[][8]) {
         return 0;
 	}
 	else if (piece == wRook || piece == bRook) {
-		if (rook(input, board)) {
-            completemove(input, board);
+		if (rook(mov, board)) {
+            completemove(mov, board);
 			/*move completed*/
 			return 1;
 		}
@@ -170,8 +167,8 @@ int checkMove(int input[], int player, int board[][8]) {
         return 0;
 	}
 	else if (piece == wQueen || piece == bQueen) {
-		if (queen(input, board)) {
-            completemove(input, board);
+		if (queen(mov, board)) {
+            completemove(mov, board);
 			/*move completed*/
 			return 1;
 		}
@@ -179,8 +176,8 @@ int checkMove(int input[], int player, int board[][8]) {
         return 0;
 	}
 	else if (piece == wKing || piece == bKing) {
-		if (king(input, board)) {
-            completemove(input, board);
+		if (king(mov, board)) {
+            completemove(mov, board);
 			/*move completed*/
 			return 1;
 		}
@@ -191,16 +188,12 @@ int checkMove(int input[], int player, int board[][8]) {
     return 0;
 }
 
-int checkInput(int input[]) {
-	/*check if the input is coordinates on board*/
-	if ((input[0] >= 0 && input[0] < 8) ) {
-		/*check if first input is a letter A-H or a-h*/
-		if (input[1] >= 0 && input[1] < 8) {
-			/*check if second input is a number 1-8*/
-			if ((input[2] >= 0 && input[2] < 8) ) {
-				/*check if third input is a letter A-H or a-h*/
-				if (input[3] >= 0 && input[3] < 8) {
-					/*check if fourth input is a number 1-8*/
+int checkInput(struct Move mov) {
+	/*check if the input coordinates is on board*/
+	if ((mov.currRow >= 0 && mov.currRow < 8) ) {
+		if (mov.currCol >= 0 && mov.currCol < 8) {
+			if ((mov.nextRow >= 0 && mov.nextRow < 8) ) {
+				if (mov.nextCol >= 0 && mov.nextCol < 8) {
 					return 1;
 				}
 			}
@@ -209,11 +202,11 @@ int checkInput(int input[]) {
 	return 0;
 }
 
-int makemove(int player, int *move, int board[][7])
+int makemove(int player, struct Move mov, int board[][7])
 {
-	if (checkInput(move)) {
-		if (checkColor(move, player, board)) {
-			if (checkMove(move, player, board)) {
+	if (checkInput(mov)) {
+		if (checkColor(mov, player, board)) {
+			if (checkMove(mov, player, board)) {
 				return 0;
 			}
 		}
@@ -225,12 +218,9 @@ int makemove(int player, int *move, int board[][7])
  This method will move a piece from its
  current position to a new one
 */
-void completemove(int pos[], int b[][8]) {
-	/*[0] = curCol, [1] curRow, [2] nexCol, [3] nexRow*/
-/*
-	printf("%d,%d,%d,%d\n",pos[0], pos[1], pos[2], pos[3]);*/
-	int tempPiece = b[pos[1]][pos[0]];
-	b[pos[1]][pos[0]] = 0;
-	b[pos[3]][pos[2]] = tempPiece;
+void completemove(struct Move mov, int b[][8]) {
+	int tempPiece = b[mov.currRow][mov.currCol];
+	b[mov.currRow][mov.currCol] = 0;
+	b[mov.nextRow][mov.nextCol] = tempPiece;
 	resetPassantArrays();
 }

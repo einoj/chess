@@ -14,7 +14,7 @@ GtkLabel *currentPlayer, *row_label, *col_label;
 
 char note[5];
 char mnum[11]; // max int size is 10 chars long + 0 char
-int move[4]; //src row col; dest row col 
+struct Move mov;
 int board[8][8];
 int movecnt = 0;
 
@@ -178,9 +178,9 @@ int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
 		return 0;
 }
 
-void algebraic_notation(char *note, int *move, int board[][8])
+void algebraic_notation(char *note, struct Move mov, int board[][8])
 {
-  int piece = board[move[1]][move[0]];
+  int piece = board[mov.currRow][mov.currCol];
   note[0] = ' ';
   if (piece == 2 || piece == 8) {
     note[1] = 'N';
@@ -193,13 +193,13 @@ void algebraic_notation(char *note, int *move, int board[][8])
   } else if (piece == 6 || piece == 12) {
     note[1] = 'K';
   } 
-  note[2] = move[3] + 97;
-  note[3] = move[2] + 48;
+  note[2] = mov.nextRow + 97;
+  note[3] = mov.nextCol + 48;
   note[4] = 0;
 
   if (piece == 1 || piece == 7) {
-    note[1] = move[3] + 97;
-    note[2] = move[2] + 48;
+    note[1] = mov.nextRow + 97;
+    note[2] = mov.nextCol + 48;
     note[3] = 0;
   }
 }
@@ -223,8 +223,8 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
                     NULL);
             //store the position you move from. It will be used to move the pieces in the board array
             // subtract 1 from left because the row numbers are part of the label table
-            move[0] = left-1;
-            move[1] = top;
+            mov.currCol = left-1;
+            mov.currRow = top;
             /*save label*/
             prevEventbox = ebox;
             /*save the current coordinates*/
@@ -239,10 +239,10 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
                     NULL);
             //store the position you move to. It will be used to move the pieces in the board array
             // subtract 1 from left because the row numbers are part of the label table
-            move[2] = left-1;
-            move[3] = top;
+            mov.nextCol = left-1;
+            mov.nextRow = top;
             /*color back to normal*/
-            if ((move[0]+move[1])&1){
+            if ((mov.currCol+mov.currRow)&1){
                 /*odd square, darkbrown color*/
                 //gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
                 gtk_widget_set_name (prevEventbox, "darkbrown"); 
@@ -250,8 +250,8 @@ static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
                 /*even square, lightbrown color*/
                 gtk_widget_set_name (prevEventbox, "lightbrown"); 
             }
-            algebraic_notation(note, move, board);
-            int u = makemove(player, move, board);
+            algebraic_notation(note, mov, board);
+            int u = makemove(player, mov, board);
             if (!u) {
                 buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
                 gtk_text_buffer_get_end_iter(buffer, &txtiter);

@@ -1,60 +1,58 @@
 #include <chess.h>
 
-int king(int pos[], int board[][8]) {
-	/*[col][row][col][row]*/
-	/*pos[] contains current possitions and new possitions [0][1]=current [2][3] = new*/
-	if (pos[3] == pos[1]+1 && pos[2] == pos[0]) {
+int king(struct Move mov, int board[][8]) {
+	if (mov.nextRow == mov.currRow+1 && mov.nextCol == mov.currCol) {
 		/*north*/
-		if(!squareUnderAttack(pos,board)) {
+		if(!squareUnderAttack(mov,board)) {
 			return 1;
 		}
 		return 1;
 	}
-	else if (pos[3] == pos[1] && pos[2] == pos[0]-1) {
+	else if (mov.nextRow == mov.currRow && mov.nextCol == mov.currCol-1) {
 		/*west*/
-		if(!squareUnderAttack(pos,board)) {
+		if(!squareUnderAttack(mov,board)) {
 			return 1;
 		}
 		return 1;
 	}
-	else if (pos[3] == pos[1]-1 && pos[2] == pos[0]) {
+	else if (mov.nextRow == mov.currRow-1 && mov.nextCol == mov.currCol) {
 		/*move south*/
-		if(!squareUnderAttack(pos,board)) {
+		if(!squareUnderAttack(mov,board)) {
 			return 1;
 		}
 		return 1;
 	}
-	else if (pos[3] == pos[1] && pos[2] == pos[0]+1) {
+	else if (mov.nextRow == mov.currRow && mov.nextCol == mov.currCol+1) {
 		/*move east*/
-		if(!squareUnderAttack(pos,board)) {
+		if(!squareUnderAttack(mov,board)) {
 			return 1;
 		}
 		return 1;
 	}
-	else if (pos[3] == pos[1]+1 && pos[2] == pos[0]+1) {
+	else if (mov.nextRow == mov.currRow+1 && mov.nextCol == mov.currCol+1) {
 		/*move north east*/
-		if(!squareUnderAttack(pos,board)) {
+		if(!squareUnderAttack(mov,board)) {
 			return 1;
 		}
 		return 1;
 	}
-	else if (pos[3] == pos[1]+1 && pos[2] == pos[0]-1) {
+	else if (mov.nextRow == mov.currRow+1 && mov.nextCol == mov.currCol-1) {
 		/*move north west*/
-		if(!squareUnderAttack(pos,board)) {
+		if(!squareUnderAttack(mov,board)) {
 			return 1;
 		}
 		return 1;
 	}
-	else if (pos[3] == pos[1]-1 && pos[2] == pos[0]-1) {
+	else if (mov.nextRow == mov.currRow-1 && mov.nextCol == mov.currCol-1) {
 		/*move south west*/
-		if(!squareUnderAttack(pos,board)) {
+		if(!squareUnderAttack(mov,board)) {
 			return 0;
 		}
 		return 1;
 	}
-	else if (pos[3] == pos[1]-1 && pos[2] == pos[0]+1) {
+	else if (mov.nextRow == mov.currRow-1 && mov.nextCol == mov.currCol+1) {
 		/*move south east*/
-		if(!squareUnderAttack(pos,board)) {
+		if(!squareUnderAttack(mov,board)) {
 			return 1;
 		}
 		return 0;

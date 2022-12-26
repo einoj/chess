@@ -1,33 +1,31 @@
 #include <chess.h>
 
-int pawn(int pos[], int player, int board[][8]) {
-	/*[col][row][col][row]*/
-	/*pos[] contains current possitions and new possitions [0][1]=current [2][3] = new*/
+int pawn(struct Move mov, int player, int board[][8]) {
 	if (player) {
 		/*player is black*/
-		if (pos[3] == pos[1]+1 && pos[2] == pos[0]+1) {
+		if (mov.nextRow == mov.currRow+1 && mov.nextCol == mov.currCol+1) {
 			/*move north east*/
-			if (checkPosition(pos[3], pos[2], board)) {
+			if (checkPosition(mov.nextRow, mov.nextCol, board)) {
 				/*piece at position, therfore move is leagal*/
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			/*a pawn was at new pos the previous round, therfore move is leagal*/
-			} else if(checkPassant(pos[1],pos[2],player)) {
+			} else if(checkPassant(mov.currRow,mov.nextCol,player)) {
 				/*remove the pawn that moved last round*/
-				board[pos[3]-1][pos[2]] = 0;
+				board[mov.nextRow-1][mov.nextCol] = 0;
 				return 1;
 			}
 		}
-		else if (pos[3] == pos[1]+1 && pos[2] == pos[0]-1) {
+		else if (mov.nextRow == mov.currRow+1 && mov.nextCol == mov.currCol-1) {
 			/*move north west*/
-			if (checkPosition(pos[3], pos[2], board)) {
+			if (checkPosition(mov.nextRow, mov.nextCol, board)) {
 				/*piece at position, therfore move is leagal*/
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			/*a pawn was at new pos the previous round, therfore move is leagal*/
-			} else if(checkPassant(pos[1],pos[2],player)) {
+			} else if(checkPassant(mov.currRow,mov.nextCol,player)) {
 				/*remove the pawn that moved last round*/
-				board[pos[3]-1][pos[2]] = 0;
+				board[mov.nextRow-1][mov.nextCol] = 0;
 				return 1;
 			}
 			else {
@@ -35,9 +33,9 @@ int pawn(int pos[], int player, int board[][8]) {
 				return 0;
 			}
 		}
-		else if (pos[3] == pos[1]+1 && pos[2] == pos[0]) {
+		else if (mov.nextRow == mov.currRow+1 && mov.nextCol == mov.currCol) {
 			/*Move one step north*/
-			if (!checkPosition(pos[3], pos[2], board)) {
+			if (!checkPosition(mov.nextRow, mov.nextCol, board)) {
 				/*piece not at position therfore move is leagal*/
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
@@ -47,15 +45,15 @@ int pawn(int pos[], int player, int board[][8]) {
 				return 0;
 			}
 		}
-		else if (pos[3] == pos[1]+2 && pos[2] == pos[0]) {
+		else if (mov.nextRow == mov.currRow+2 && mov.nextCol == mov.currCol) {
 			/*Move two steps north*/
-			if (!checkPosition(pos[3], pos[2], board) && !checkPosition(pos[3]-1, pos[2], board) && (pos[1] == 1 || pos[1] == 6)) {
+			if (!checkPosition(mov.nextRow, mov.nextCol, board) && !checkPosition(mov.nextRow-1, mov.nextCol, board) && (mov.currRow == 1 || mov.currRow == 6)) {
 				/*No piece at new position, middle position, and not moved, therfore move is leagal*/
-				completemove(pos, board);
+				completemove(mov, board);
 				/*set the previous collumn position to the 
 				* pessant array. This is done after the move is made
 				* because completemove resets the pessant arrays.*/
-				setPassant(pos[0],player);
+				setPassant(mov.currCol,player);
 				return 2;
 			}
 			else {
@@ -71,30 +69,30 @@ int pawn(int pos[], int player, int board[][8]) {
 
 	else {
 		/*player is white*/
-		if (pos[3] == pos[1]-1 && pos[2] == pos[0]+1) {
+		if (mov.nextRow == mov.currRow-1 && mov.nextCol == mov.currCol+1) {
 			/*move south east*/
-			if (checkPosition(pos[3], pos[2], board)) {
+			if (checkPosition(mov.nextRow, mov.nextCol, board)) {
 				/*piece at position, therfore move is leagal*/
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 
 			/*a pawn was at new pos the previous round, therfore move is leagal*/
-			} else if(checkPassant(pos[1],pos[2],player)) {
+			} else if(checkPassant(mov.currRow,mov.nextCol,player)) {
 				/*remove the pawn that moved last round*/
-				board[pos[3]+1][pos[2]] = 0;
+				board[mov.nextRow+1][mov.nextCol] = 0;
 				return 1;
 			}
 		}
-		else if (pos[3] == pos[1]-1 && pos[2] == pos[0]-1) {
+		else if (mov.nextRow == mov.currRow-1 && mov.nextCol == mov.currCol-1) {
 			/*move south west*/
-			if (checkPosition(pos[3], pos[2], board)) {
+			if (checkPosition(mov.nextRow, mov.nextCol, board)) {
 				/*piece at position, therfore move is leagal*/
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
 			/*a pawn was at new pos the previous round, therfore move is leagal*/
-			} else if(checkPassant(pos[1],pos[2],player)) {
+			} else if(checkPassant(mov.currRow,mov.nextCol,player)) {
 				/*remove the pawn that moved last round*/
-				board[pos[3]+1][pos[2]] = 0;
+				board[mov.nextRow+1][mov.nextCol] = 0;
 				return 1;
 			}
 			else {
@@ -102,9 +100,9 @@ int pawn(int pos[], int player, int board[][8]) {
 				return 0;
 			}
 		}
-		else if (pos[3] == pos[1]-1 && pos[2] == pos[0]) {
+		else if (mov.nextRow == mov.currRow-1 && mov.nextCol == mov.currCol) {
 			/*Move one step south*/
-			if (!checkPosition(pos[3], pos[2], board)) {
+			if (!checkPosition(mov.nextRow, mov.nextCol, board)) {
 				/*piece not at position therfore move is leagal*/
 				/*add method to check if reached end of board to swap piece*/
 				return 1;
@@ -114,15 +112,15 @@ int pawn(int pos[], int player, int board[][8]) {
 				return 0;
 			}
 		}
-		else if (pos[3] == pos[1]-2 && pos[2] == pos[0]) {
+		else if (mov.nextRow == mov.currRow-2 && mov.nextCol == mov.currCol) {
 			/*Move two steps south*/
-			if (!checkPosition(pos[3], pos[2], board) && !checkPosition(pos[3]+1, pos[2], board) && (pos[1] == 1 || pos[1] == 6)) {
+			if (!checkPosition(mov.nextRow, mov.nextCol, board) && !checkPosition(mov.nextRow+1, mov.nextCol, board) && (mov.currRow == 1 || mov.currRow == 6)) {
 				/*No piece at new position, middle position, and not moved, therfore move is leagal*/
-				completemove(pos, board);
+				completemove(mov, board);
 				/*set the previous collumn position to the 
 				* pessant array. This is done after the move is made
 				* because completemove resets the pessant arrays.*/
-				setPassant(pos[0],player);
+				setPassant(mov.currCol,player);
 				return 2;
 			}
 			else {

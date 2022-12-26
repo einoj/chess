@@ -1,19 +1,17 @@
 #include <stdlib.h>
 #include <chess.h>
 
-int bishop(int pos[], int board[][8]) {
-	/*[col][row][col][row]*/
-	/*pos[] contains current possitions and new possitions [0][1]=current [2][3] = new*/
+int bishop(struct Move mov, int board[][8]) {
 	int i,j;
-	if (pos[3] > pos[1] && pos[2] > pos[0]) {
+	if (mov.nextRow > mov.currRow && mov.nextCol > mov.currCol) {
 		/*move down right*/
 		/*if move is not horizontal, return 0*/
 		/*change in x-axis must equal change in y-axis*/
-		if (!(abs(pos[0]-pos[2])==abs(pos[1]-pos[3]))){
+		if (!(abs(mov.currCol-mov.nextCol)==abs(mov.currRow-mov.nextRow))){
 			return 0;
 		}
-		j = pos[0];
-		for(i = pos[1]+1; i < pos[3]; i++) {
+		j = mov.currCol;
+		for(i = mov.currRow+1; i < mov.nextRow; i++) {
 				j++;
 				if (checkPosition(i,j,board)) {
 					/*if piece at intermediate possition move is illegal*/
@@ -23,15 +21,15 @@ int bishop(int pos[], int board[][8]) {
 		/*reached new position*/
 		return 1;
 	}
-	else if (pos[3] > pos[1] && pos[2] < pos[0]) {
+	else if (mov.nextRow > mov.currRow && mov.nextCol < mov.currCol) {
 		/*move down left*/
 		/*if move is not horizontal, return 0*/
 		/*change in x-axis must equal change in y-axis*/
-		if (!(abs(pos[0]-pos[2])==abs(pos[1]-pos[3]))){
+		if (!(abs(mov.currCol-mov.nextCol)==abs(mov.currRow-mov.nextRow))){
 			return 0;
 		}
-		j = pos[0];
-		for(i = pos[1]+1; i < pos[3]; i++) {
+		j = mov.currCol;
+		for(i = mov.currRow+1; i < mov.nextRow; i++) {
 				j--;
 				if (checkPosition(i,j,board)) {
 					/*if piece at intermediate possition move is illegal*/
@@ -41,15 +39,15 @@ int bishop(int pos[], int board[][8]) {
 		/*reached new position*/
 		return 1;
 	}
-	else if (pos[3] < pos[1] && pos[2] < pos[0]) {
+	else if (mov.nextRow < mov.currRow && mov.nextCol < mov.currCol) {
 		/*move up left*/
 		/*if move is not horizontal, return 0*/
 		/*change in x-axis must equal change in y-axis*/
-		if (!(abs(pos[0]-pos[2])==abs(pos[1]-pos[3]))){
+		if (!(abs(mov.currCol-mov.nextCol)==abs(mov.currRow-mov.nextRow))){
 			return 0;
 		}
-		j = pos[0];
-		for(i = pos[1]-1; i > pos[3]; i--) {
+		j = mov.currCol;
+		for(i = mov.currRow-1; i > mov.nextRow; i--) {
 				j--;
 				if (checkPosition(i,j,board)) {
 					/*if piece at intermediate possition move is illegal*/
@@ -59,15 +57,15 @@ int bishop(int pos[], int board[][8]) {
 		/*reached new position*/
 		return 1;
 	}
-	else if (pos[3] < pos[1] && pos[2] > pos[0]) {
+	else if (mov.nextRow < mov.currRow && mov.nextCol > mov.currCol) {
 		/*move up right*/
 		/*if move is not horizontal, return 0*/
 		/*change in x-axis must equal change in y-axis*/
-		if (!(abs(pos[0]-pos[2])==abs(pos[1]-pos[3]))){
+		if (!(abs(mov.currCol-mov.nextCol)==abs(mov.currRow-mov.nextRow))){
 			return 0;
 		}
-		j = pos[0];
-		for(i = pos[1]-1; i > pos[3]; i--) {
+		j = mov.currCol;
+		for(i = mov.currRow-1; i > mov.nextRow; i--) {
 				j++;
 				if (checkPosition(i,j,board)) {
 					/*if piece at intermediate possition move is illegal*/
