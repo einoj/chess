@@ -8,4 +8,5 @@
 * DONE Get rid of GTK warnings 
 ** DONE Update to using CSS for gtk3, since
 gtk_widget_override_background_color is depracted
+* TODO Add castling functionality
 
