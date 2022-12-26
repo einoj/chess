@@ -91,15 +91,17 @@ void setPassant(int column, int player) {
 * Check the opposite color of the current player
 * Pawn must be on its fifth rank*/
 int checkPassant(int row,int column, int player) {
-	if (!player) {
+	if (!player) { // white player
 		if (row == 3) {
 			return enPassantB[column];
-		}else return 0; 
-	} else {
-		if (row == 4) {
-			return enPassantW[column];
-		}else return 0; 
+		}
+        return 0;
 	}
+	// black palyer
+	if (row == 4) {
+		return enPassantW[column];
+	}
+	return 0;
 }
 
 
@@ -111,9 +113,7 @@ int checkColor(struct Move mov, int player, int b[][8]) {
 		/* or player is black and attacking piece is black, and defending piece is white or empty*/
 		return 1;
 	}
-	else {
-		return 0;
-	}
+    return 0;
 }
 
 int checkMove(struct Move mov, int player, int board[][8]) {
