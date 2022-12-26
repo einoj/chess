@@ -13,7 +13,7 @@ GtkTextIter txtiter;
 GtkLabel *currentPlayer, *row_label, *col_label;
 
 char note[5];
-char mnum[11]; // max int size is 10 chars long + 0 char
+char mnum[12]; // max int size is 11 chars (if you inlude the - sign) long + 0 char
 struct Move mov;
 int board[8][8];
 int movecnt = 0;
