@@ -219,8 +219,7 @@ int makemove(int player, struct Move mov, int board[][7])
  current position to a new one
 */
 void completemove(struct Move mov, int b[][8]) {
-	int tempPiece = b[mov.currRow][mov.currCol];
+	b[mov.nextRow][mov.nextCol] = b[mov.currRow][mov.currCol];
 	b[mov.currRow][mov.currCol] = 0;
-	b[mov.nextRow][mov.nextCol] = tempPiece;
 	resetPassantArrays();
 }
