@@ -4,7 +4,7 @@ struct Move {
     unsigned char nextRow;
     unsigned char nextCol;
 };
-int makemove(int player, struct Move mov, int board[][7]);
+int makemove(int player, struct Move mov, int board[][8]);
 int rook(struct Move mov, int board[][8]);
 int knight(struct Move mov, int board[][8]);
 int bishop(struct Move mov, int board[][8]);

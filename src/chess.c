@@ -202,7 +202,7 @@ int checkInput(struct Move mov) {
 	return 0;
 }
 
-int makemove(int player, struct Move mov, int board[][7])
+int makemove(int player, struct Move mov, int board[][8])
 {
 	if (checkInput(mov)) {
 		if (checkColor(mov, player, board)) {
