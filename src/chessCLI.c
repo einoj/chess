@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include "letterToInt.h"
-
-extern int makemove(int player, int *move, int board[][8]);
-extern void initBoard(int tmpBoard[][8]);
+#include <chess.h>
 
 void printBoard(int tmpBoard[][8]) {
 	/*print out the current board and pieces*/
@@ -12,64 +10,64 @@ void printBoard(int tmpBoard[][8]) {
 	/*count down so white is south black is north*/
 	for (i = 0; i < 8; ++i) {
 		/*print edge of board*/
-		printf("%d|", 8-i);
+		printf("%d│", 8-i);
 		for (j = 0; j < 8; ++j) {
 			if (tmpBoard[i][j] == 1) {
 				/*white pawn*/
-				printf("wP|");
+				printf(" ♙│");
 			}
 			else if (tmpBoard[i][j] == 7) {
 				/*black pawn*/
-				printf("bP|");
+				printf(" ♟│");
 			}
 			else if (tmpBoard[i][j] == 2) {
 				/*white knight*/
-				printf("wN|");
+				printf("wN│");
 			}
 			else if (tmpBoard[i][j] == 8) {
 				/*black knight*/
-				printf("bN|");
+				printf("bN│");
 			}
 			else if (tmpBoard[i][j] == 3) {
 				/*white bishop*/
-				printf("wB|");
+				printf("wB│");
 			}
 			else if (tmpBoard[i][j] == 9) {
 				/*black knight*/
-				printf("bB|");
+				printf("bB│");
 			}
 			else if (tmpBoard[i][j] == 4) {
 				/*white Rook*/
-				printf("wR|");
+				printf("wR│");
 			}
 			else if (tmpBoard[i][j] == 10) {
 				/*black Rook*/
-				printf("bR|");
+				printf("bR│");
 			}
 			else if (tmpBoard[i][j] == 5) {
 				/*white Queen*/
-				printf("wQ|");
+				printf("wQ│");
 			}
 			else if (tmpBoard[i][j] == 11) {
 				/*black Queen*/
-				printf("bQ|");
+				printf("bQ│");
 			}
 			else if (tmpBoard[i][j] == 6) {
 				/*white King*/
-				printf("wK|");
+				printf("wK│");
 			}
 			else if (tmpBoard[i][j] == 12) {
 				/*black King*/
-				printf("bK|");
+				printf("bK│");
 			}
 			else {
 				/*empty square*/
-				printf("  |");
+				printf("  │");
 			}
 		}
 		/*new row*/
 		if (i > 0) {
-			printf("\n -------------------------\n");
+			printf("\n ─────────────────────────\n");
 		}
 		else {
 			printf("\n _________________________\n");

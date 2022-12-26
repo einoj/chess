@@ -1,3 +1,5 @@
+#include <chess.h>
+
 int knight(int pos[], int board[][8]) {
 	/* pos is the input player is the color of player*/
 	if (pos[3] == pos[1]+1 && pos[2] == pos[0]+2) {

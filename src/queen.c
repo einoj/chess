@@ -1,5 +1,5 @@
 #include <stdlib.h>
-extern int checkPosition(int row, int col, int b[][8]);
+#include <chess.h>
 
 int queen(int pos[], int board[][8]) {
 	/*[col][row][col][row]*/

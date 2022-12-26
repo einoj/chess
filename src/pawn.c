@@ -1,7 +1,4 @@
-extern int checkPosition(int row, int col, int b[][8]);
-extern void completemove(int pos[], int b[][8]);
-extern void setPassant(int column, int player);
-extern int checkPassant(int row, int column, int player);
+#include <chess.h>
 
 int pawn(int pos[], int player, int board[][8]) {
 	/*[col][row][col][row]*/

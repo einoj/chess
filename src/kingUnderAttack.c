@@ -1,16 +1,9 @@
+#include <chess.h>
+
 /* This function first checks if the king is currently under attack
 * If the king is under attack, check if it is possible to save it
 * Returns 0 if king is not under attack, 1 if check 2 if check mate
 */
-
-extern int rook(int pos[], int board[][8]);
-extern int knight(int pos[], int board[][8]);
-extern int bishop(int pos[], int board[][8]);
-extern int queen(int pos[], int board[][8]);
-extern int king(int pos[], int board[][8]);
-extern int pawn(int pos[], int player, int board[][8]);
-extern int makemove(int pos[], int board[][8]);
-
 int kingUnderAttack(int player, int move[], int board[][8])
 {
     /*if player is white*/

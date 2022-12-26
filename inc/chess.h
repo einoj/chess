@@ -1,0 +1,15 @@
+int makemove(int player, int *move, int board[][7]);
+int rook(int pos[], int board[][8]);
+int knight(int pos[], int board[][8]);
+int bishop(int pos[], int board[][8]);
+int queen(int pos[], int board[][8]);
+int king(int pos[], int board[][8]);
+int pawn(int pos[], int player, int board[][8]);
+void initBoard(int tmpBoard[][8]);
+int checkPosition(int row, int col, int b[][8]);
+void setPassant(int column, int player);
+int checkPassant(int row, int column, int player);
+int squareUnderAttack(int move[], int board[][8]);
+void resetPassantArrays();
+void printBoard(int board[][8]);
+void completemove(int pos[], int b[][8]);

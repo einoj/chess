@@ -1,4 +1,4 @@
-extern int squareUnderAttack(int move[], int board[][8]);
+#include <chess.h>
 
 int king(int pos[], int board[][8]) {
 	/*[col][row][col][row]*/

@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include "int2utf8.h"
+#include <chess.h>
 
 static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
 GdkColor prevColor;
@@ -16,11 +17,6 @@ char mnum[11]; // max int size is 10 chars long + 0 char
 int move[4]; //src row col; dest row col 
 int board[8][8];
 int movecnt = 0;
-
-extern int makemove(int player, int *move, int board[][8]);
-/*initBoard method is in chess.c*/
-extern void initBoard(int tmpBoard[][8]);
-extern void resetPassantArrays(void);
 
 int main (int argc, char *argv[])
 {

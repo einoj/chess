@@ -1,12 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-extern int rook(int pos[], int board[][8]);
-extern int knight(int pos[], int board[][8]);
-extern int bishop(int pos[], int board[][8]);
-extern int queen(int pos[], int board[][8]);
-extern int king(int pos[], int board[][8]);
-extern int pawn(int pos[], int player, int board[][8]);
-extern int completemove(int pos[], int board[][8]);
+#include <chess.h>
 
 /*
 struct wChessPieces {
@@ -215,7 +209,7 @@ int checkInput(int input[]) {
 	return 0;
 }
 
-int makemove(int player, int *move, int board[][8])
+int makemove(int player, int *move, int board[][7])
 {
 	if (checkInput(move)) {
 		if (checkColor(move, player, board)) {
@@ -225,4 +219,18 @@ int makemove(int player, int *move, int board[][8])
 		}
 	} 
 	return 1;
+}
+
+/* 
+ This method will move a piece from its
+ current position to a new one
+*/
+void completemove(int pos[], int b[][8]) {
+	/*[0] = curCol, [1] curRow, [2] nexCol, [3] nexRow*/
+/*
+	printf("%d,%d,%d,%d\n",pos[0], pos[1], pos[2], pos[3]);*/
+	int tempPiece = b[pos[1]][pos[0]];
+	b[pos[1]][pos[0]] = 0;
+	b[pos[3]][pos[2]] = tempPiece;
+	resetPassantArrays();
 }
