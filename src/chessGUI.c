@@ -54,7 +54,7 @@ void algebraic_notation(char *note, struct Move mov, int board[][8])
   }
 }
 
-static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidget *ebox)
+static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidget *ebox)
 {
     // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
     int left, top, width, height;
@@ -114,7 +114,6 @@ static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkW
         }
         clicks = 0;
     }
-    return TRUE;
 }
 
 static void activate (GtkApplication* app, gpointer user_data)
