@@ -92,7 +92,6 @@ activate (GtkApplication* app,
             /*put eventbox into table*/
             gtk_grid_attach((GtkGrid *) table, eventbox,j+1,i,1,1);
 
-
             g_signal_connect(gesture, "released", G_CALLBACK (button_pressed), labelBoard);
 
             p++;
@@ -147,13 +146,9 @@ activate (GtkApplication* app,
     gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) currentPlayer,0,0,1,1);
     gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) infogrid, 1,0,1,1);
 
-
-
     /*add table to window*/
     gtk_window_set_child(GTK_WINDOW (window), hpane);
     gtk_widget_show(window);
-    g_signal_connect_swapped(G_OBJECT(window), "destroy",
-            G_CALLBACK(gtk_window_destroy), NULL);
 }
 
 int
