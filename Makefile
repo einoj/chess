@@ -3,7 +3,7 @@ OBJDIR  = obj
 SRCDIR  = src
 CLIDIR  = cliobj
 INCDIR  = inc
-LDFLAGS = `pkg-config --cflags gtk+-3.0` `pkg-config --libs gtk+-3.0`
+LDFLAGS = `pkg-config --cflags gtk4` `pkg-config --libs gtk4`
 CFLAGS  = -Wall -Os -s -I${INCDIR}
 
 SRCS    = $(wildcard $(SRCDIR)/*.c)

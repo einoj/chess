@@ -3,8 +3,7 @@
 #include "int2utf8.h"
 #include <chess.h>
 
-static gboolean button_pressed (GtkWidget*, GdkEventButton*, GtkLabel *[][8]);
-GdkColor prevColor;
+static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidget *ebox);
 int clicks = 0;
 int player = 0;
 GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
@@ -17,32 +16,31 @@ char mnum[12]; // max int size is 11 chars (if you inlude the - sign) long + 0 c
 struct Move mov;
 int board[8][8];
 int movecnt = 0;
+static GtkLabel *labelBoard[8][8];
 
-int main (int argc, char *argv[])
+static void
+activate (GtkApplication* app,
+          gpointer        user_data)
 {
     /*fill the board array with pieces*/
     initBoard(board);
     resetPassantArrays();
     GtkWidget *window, *eventbox;
     GtkLabel *label;
-    gtk_init (&argc, &argv);
-    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    GtkGesture *gesture;
+    window = gtk_application_window_new (app);
     gtk_window_set_title(GTK_WINDOW (window), "Chess board");
-    gtk_container_set_border_width(GTK_CONTAINER(window), 5);
     gtk_widget_set_size_request(window, 680,350);
-    //table = gtk_grid_new (8,8,TRUE);
     table = gtk_grid_new ();
     GtkStyleContext *context;
     GtkCssProvider *provider = gtk_css_provider_new ();
     gtk_css_provider_load_from_path (provider,
-            "style/chessGUI.css", NULL);
+            "style/chessGUI.css");
     context = gtk_widget_get_style_context (table);
     gtk_style_context_add_provider (context,
             GTK_STYLE_PROVIDER(provider),
             GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    /*container for the labels of the gui board*/
-    GtkLabel *labelBoard[8][8];
     /*one is larger to make the squares wider*/	
     char *pieces[64] = { "♜", "♞", "♝","♛","♚","♝","♞","♜",
         "♟", "♟", "♟","♟","♟","♟","♟","♟",
@@ -63,7 +61,9 @@ int main (int argc, char *argv[])
             gtk_widget_set_size_request((GtkWidget *) label, 56, 56);
             /*put the label into the container for easy access when mocing pieces*/
             labelBoard[i][j]=label;
-            eventbox = gtk_event_box_new();
+            gesture = gtk_gesture_click_new();
+            eventbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);;
+            gtk_widget_add_controller(eventbox, GTK_EVENT_CONTROLLER(gesture));
             context = gtk_widget_get_style_context (eventbox);
             gtk_style_context_add_provider (context,
                     GTK_STYLE_PROVIDER(provider),
@@ -86,22 +86,10 @@ int main (int argc, char *argv[])
                 }
             }
 
-            gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox),FALSE);
-            /*put label into eventbox*/
-            gtk_container_add(GTK_CONTAINER (eventbox), (GtkWidget *) label);
-            /*put eventbox into table*/
+            gtk_box_append(GTK_BOX (eventbox), (GtkWidget *) label);
             gtk_grid_attach((GtkGrid *) table, eventbox,j+1,i,1,1);
 
-
-            g_signal_connect(G_OBJECT (eventbox), "button_press_event",
-                    G_CALLBACK (button_pressed), (gpointer) labelBoard);
-
-            gtk_widget_set_events(eventbox, GDK_BUTTON_PRESS_MASK);
-            /*Dont need widget_realize
-             * connect to a signal that will be called 
-             * after the widget is realized automatically
-             * in g_signal_connect(window)
-             gtk_widget_realize(eventbox);*/
+            g_signal_connect(gesture, "released", G_CALLBACK (button_pressed), eventbox);
 
             p++;
         }
@@ -145,27 +133,32 @@ int main (int argc, char *argv[])
     /*add game info textview to the scroll window 
      * and the scroll window and current player label to infogrid.
      * Finally add the info grid to the hpane, right of the chess board.*/
-    scroll_win = gtk_scrolled_window_new (NULL, NULL);
+    scroll_win = gtk_scrolled_window_new ();
     gtk_widget_set_size_request(scroll_win, 250,415);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll_win),
             GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-    gtk_container_add(GTK_CONTAINER (scroll_win), textview);
+    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW (scroll_win), textview);
     gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) scroll_win,0,1,1,1);
     currentPlayer = (GtkLabel *) gtk_label_new("Current player: White");
     gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) currentPlayer,0,0,1,1);
     gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) infogrid, 1,0,1,1);
 
-
-
-    /*add table to window*/
-    gtk_container_add (GTK_CONTAINER (window), hpane);
-    gtk_widget_show_all (window);
-    g_signal_connect_swapped(G_OBJECT(window), "destroy",
-            G_CALLBACK(gtk_main_quit), NULL);
-    gtk_main();
-    return 0;
+    gtk_window_set_child(GTK_WINDOW (window), hpane);
+    gtk_widget_show(window);
 }
 
+int main (int argc, char **argv)
+{
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.einoj.chessgui", G_APPLICATION_FLAGS_NONE);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
+}
 
 int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
 {
@@ -192,7 +185,7 @@ void algebraic_notation(char *note, struct Move mov, int board[][8])
     note[1] = 'Q';
   } else if (piece == 6 || piece == 12) {
     note[1] = 'K';
-  } 
+  }
   note[2] = mov.nextRow + 97;
   note[3] = mov.nextCol + 48;
   note[4] = 0;
@@ -204,77 +197,67 @@ void algebraic_notation(char *note, struct Move mov, int board[][8])
   }
 }
 
-static gboolean button_pressed (GtkWidget *ebox, GdkEventButton *event,
-			GtkLabel *labelBoard[][8])
+static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event,
+			GtkWidget *ebox)
 {
     // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
-    unsigned left, top, width, height;
+    int left, top, width, height;
 
-    if (event->type == GDK_BUTTON_PRESS)
-    {
-        if (!clicks) {
-            gtk_widget_set_name (ebox, "selected");
-            /*get coordinates of eventbox*/
-            gtk_container_child_get(GTK_CONTAINER(table), ebox,
-                    "left-attach", &left,
-                    "top-attach",&top,
-                    "width",&width,
-                    "height",&height,
-                    NULL);
-            //store the position you move from. It will be used to move the pieces in the board array
-            // subtract 1 from left because the row numbers are part of the label table
-            mov.currCol = left-1;
-            mov.currRow = top;
-            /*save label*/
-            prevEventbox = ebox;
-            /*save the current coordinates*/
-            clicks = 1;
+    if (!clicks) {
+        gtk_widget_set_name (ebox, "selected");
+        /*get coordinates of eventbox*/
+        gtk_grid_query_child(GTK_GRID(table), ebox,
+                &left, &top, &width, &height);
+        //store the position you move from. It will be used to move the pieces in the board array
+        // subtract 1 from left because the row numbers are part of the label table
+        mov.currCol = left-1;
+        mov.currRow = top;
+        /*save label*/
+        prevEventbox = ebox;
+        /*save the current coordinates*/
+        clicks = 1;
+    } else {
+        /*make move*/
+        gtk_grid_query_child(GTK_GRID(table), ebox,
+                &left, &top, &width, &height);
+        //store the position you move to. It will be used to move the pieces in the board array
+        // subtract 1 from left because the row numbers are part of the label table
+        mov.nextCol = left-1;
+        mov.nextRow = top;
+        /*nolor back to normal*/
+        if ((mov.currCol+mov.currRow)&1){
+            /*odd square, darkbrown color*/
+            //gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
+            gtk_widget_set_name (prevEventbox, "darkbrown");
         } else {
-            /*make move*/
-            gtk_container_child_get(GTK_CONTAINER(table), ebox,
-                    "left-attach",  &left,
-                    "top-attach",   &top,
-                    "width", &width,
-                    "height",&height,
-                    NULL);
-            //store the position you move to. It will be used to move the pieces in the board array
-            // subtract 1 from left because the row numbers are part of the label table
-            mov.nextCol = left-1;
-            mov.nextRow = top;
-            /*color back to normal*/
-            if ((mov.currCol+mov.currRow)&1){
-                /*odd square, darkbrown color*/
-                //gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
-                gtk_widget_set_name (prevEventbox, "darkbrown"); 
-            } else {
-                /*even square, lightbrown color*/
-                gtk_widget_set_name (prevEventbox, "lightbrown"); 
-            }
-            algebraic_notation(note, mov, board);
-            int u = makemove(player, mov, board);
-            if (!u) {
-                buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
-                gtk_text_buffer_get_end_iter(buffer, &txtiter);
-                if (!player) {
-                    sprintf(mnum,"%d",++movecnt);
-                    gtk_text_buffer_insert(buffer, &txtiter, " ", -1);
-                    gtk_text_buffer_insert(buffer, &txtiter, mnum, -1);
-                    gtk_text_buffer_insert(buffer, &txtiter, ".", -1);
-                }
-                /* Update the GUI board */
-                drawGuiBoard(labelBoard, board);	
-                /* Update the game info */
-                gtk_text_buffer_insert(buffer, &txtiter, note, -1);
-
-                player = !player; 
-                if (player) {
-                    gtk_label_set_text(currentPlayer, "Current player: Black");
-                } else {
-                    gtk_label_set_text(currentPlayer, "Current player: White");
-                }
-            }
-            clicks = 0;
+            /*even square, lightbrown color*/
+            gtk_widget_set_name (prevEventbox, "lightbrown");
         }
+        algebraic_notation(note, mov, board);
+        int u = makemove(player, mov, board);
+        if (!u) {
+            buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
+            gtk_text_buffer_get_end_iter(buffer, &txtiter);
+            if (!player) {
+                sprintf(mnum,"%d",++movecnt);
+                gtk_text_buffer_insert(buffer, &txtiter, " ", -1);
+                gtk_text_buffer_insert(buffer, &txtiter, mnum, -1);
+                gtk_text_buffer_insert(buffer, &txtiter, ".", -1);
+            }
+            /* Update the GUI board */
+            drawGuiBoard(labelBoard, board);	
+            /* Update the game info */
+            gtk_text_buffer_insert(buffer, &txtiter, note, -1);
+
+            player = !player;
+            if (player) {
+                gtk_label_set_text(currentPlayer, "Current player: Black");
+            } else {
+                gtk_label_set_text(currentPlayer, "Current player: White");
+            }
+        }
+        clicks = 0;
     }
-    return FALSE;
+    return TRUE;
 }
+
