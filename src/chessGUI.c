@@ -5,9 +5,8 @@
 
 static int clicks = 0;
 static int player = 0;
-static GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
+static GtkWidget *table, *prevEventbox, *textview;
 static GtkTextBuffer *buffer;
-static GtkTextIter txtiter;
 static GtkLabel *currentPlayer;
 
 static char mnum[12]; // max int size is 11 chars (if you inlude the - sign) long + 0 char
@@ -58,6 +57,7 @@ static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidge
     // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
     int left, top, width, height;
     char note[5];
+    GtkTextIter txtiter;
 
     if (!clicks) {
         gtk_widget_set_name (ebox, "selected");
@@ -121,7 +121,7 @@ static void activate (GtkApplication* app, gpointer user_data)
     /*fill the board array with pieces*/
     initBoard(board);
     resetPassantArrays();
-    GtkWidget *window, *eventbox;
+    GtkWidget *window, *eventbox, *hpane, *infogrid, *scroll_win;
     GtkLabel *label;
     GtkGesture *gesture;
     window = gtk_application_window_new (app);
