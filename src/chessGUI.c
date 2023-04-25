@@ -10,7 +10,6 @@ static GtkTextBuffer *buffer;
 static GtkTextIter txtiter;
 static GtkLabel *currentPlayer;
 
-static char note[5];
 static char mnum[12]; // max int size is 11 chars (if you inlude the - sign) long + 0 char
 static struct Move mov;
 static int board[8][8];
@@ -32,22 +31,22 @@ void algebraic_notation(char *note, struct Move mov, int board[][8])
 {
   int piece = board[mov.currRow][mov.currCol];
   note[0] = ' ';
-  if (piece == 2 || piece == 8) {
+  if (piece == wKnight || piece == bKnight) {
     note[1] = 'N';
-  } else if (piece == 3 || piece == 9) {
+  } else if (piece == wBishop || piece == bBishop) {
     note[1] = 'B';
-  } else if (piece == 4 || piece == 10) {
+  } else if (piece == wRook || piece == bRook) {
     note[1] = 'R';
-  } else if (piece == 5 || piece == 11) {
+  } else if (piece == wQueen || piece == bQueen) {
     note[1] = 'Q';
-  } else if (piece == 6 || piece == 12) {
+  } else if (piece == wKing || piece == bKing) {
     note[1] = 'K';
   }
   note[2] = mov.nextRow + 97;
   note[3] = mov.nextCol + 48;
   note[4] = 0;
 
-  if (piece == 1 || piece == 7) {
+  if (piece == wPawn || piece == bPawn) {
     note[1] = mov.nextRow + 97;
     note[2] = mov.nextCol + 48;
     note[3] = 0;
@@ -58,6 +57,7 @@ static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidge
 {
     // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
     int left, top, width, height;
+    char note[5];
 
     if (!clicks) {
         gtk_widget_set_name (ebox, "selected");

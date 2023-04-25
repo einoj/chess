@@ -2,27 +2,6 @@
 #include <string.h>
 #include <chess.h>
 
-/*
-struct wChessPieces {
-	int type;
-	struct wChessPieces next;
-	struct wChessPieces prev;
-}
-
-struct bChessPieces {
-	int type;
-	struct bChessPieces next;
-	struct bChessPieces prev;
-}
-*/
-/*bChessPieces nodeB;
-wChessPieces nodeW;
-*/
-/*int board[8][8]; for use with cmd chess*/
-enum pieces { emptySquare,
-    wPawn, wKnight, wBishop, wRook, wQueen, wKing,
-    bPawn, bKnight, bBishop, bRook, bQueen, bKing
-};
 int enPassantW[8], enPassantB[8];
 
 void initBoard(int tmpBoard[][8]){
