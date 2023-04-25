@@ -54,7 +54,6 @@ void algebraic_notation(char *note, struct Move mov, int board[][8])
 
 static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidget *ebox)
 {
-    // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
     int left, top, width, height;
     char note[5];
     GtkTextIter txtiter;
@@ -83,7 +82,6 @@ static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidge
         /*nolor back to normal*/
         if ((mov.currCol+mov.currRow)&1){
             /*odd square, darkbrown color*/
-            //gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
             gtk_widget_set_name (prevEventbox, "darkbrown");
         } else {
             /*even square, lightbrown color*/
@@ -208,7 +206,6 @@ static void activate (GtkApplication* app, gpointer user_data)
     }
 
     /*make a horizontal pane*/
-    //hpane = gtk_grid_new(1,2,TRUE);
     hpane = gtk_grid_new();
     /*add the table to the horizontal pane*/
     gtk_grid_attach((GtkGrid *) hpane, table, 0, 0, 1,1);
