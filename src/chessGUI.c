@@ -3,7 +3,6 @@
 #include "int2utf8.h"
 #include <chess.h>
 
-static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidget *ebox);
 int clicks = 0;
 int player = 0;
 GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
@@ -18,9 +17,107 @@ int board[8][8];
 int movecnt = 0;
 static GtkLabel *labelBoard[8][8];
 
-static void
-activate (GtkApplication* app,
-          gpointer        user_data)
+int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
+{
+		int i, j;
+		for (i = 0; i < 8; i++) {
+			for (j = 0; j < 8; j++) {
+				gtk_label_set_text(labels[i][j], convertClipieceToGuiPiece(cliBoard[i][j]));
+			}
+		}
+		return 0;
+}
+
+void algebraic_notation(char *note, struct Move mov, int board[][8])
+{
+  int piece = board[mov.currRow][mov.currCol];
+  note[0] = ' ';
+  if (piece == 2 || piece == 8) {
+    note[1] = 'N';
+  } else if (piece == 3 || piece == 9) {
+    note[1] = 'B';
+  } else if (piece == 4 || piece == 10) {
+    note[1] = 'R';
+  } else if (piece == 5 || piece == 11) {
+    note[1] = 'Q';
+  } else if (piece == 6 || piece == 12) {
+    note[1] = 'K';
+  }
+  note[2] = mov.nextRow + 97;
+  note[3] = mov.nextCol + 48;
+  note[4] = 0;
+
+  if (piece == 1 || piece == 7) {
+    note[1] = mov.nextRow + 97;
+    note[2] = mov.nextCol + 48;
+    note[3] = 0;
+  }
+}
+
+static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidget *ebox)
+{
+    // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
+    int left, top, width, height;
+
+    if (!clicks) {
+        gtk_widget_set_name (ebox, "selected");
+        /*get coordinates of eventbox*/
+        gtk_grid_query_child(GTK_GRID(table), ebox,
+                &left, &top, &width, &height);
+        //store the position you move from. It will be used to move the pieces in the board array
+        // subtract 1 from left because the row numbers are part of the label table
+        mov.currCol = left-1;
+        mov.currRow = top;
+        /*save label*/
+        prevEventbox = ebox;
+        /*save the current coordinates*/
+        clicks = 1;
+    } else {
+        /*make move*/
+        gtk_grid_query_child(GTK_GRID(table), ebox,
+                &left, &top, &width, &height);
+        //store the position you move to. It will be used to move the pieces in the board array
+        // subtract 1 from left because the row numbers are part of the label table
+        mov.nextCol = left-1;
+        mov.nextRow = top;
+        /*nolor back to normal*/
+        if ((mov.currCol+mov.currRow)&1){
+            /*odd square, darkbrown color*/
+            //gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
+            gtk_widget_set_name (prevEventbox, "darkbrown");
+        } else {
+            /*even square, lightbrown color*/
+            gtk_widget_set_name (prevEventbox, "lightbrown");
+        }
+        algebraic_notation(note, mov, board);
+        int u = makemove(player, mov, board);
+        if (!u) {
+            buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
+            gtk_text_buffer_get_end_iter(buffer, &txtiter);
+            if (!player) {
+                sprintf(mnum,"%d",++movecnt);
+                gtk_text_buffer_insert(buffer, &txtiter, " ", -1);
+                gtk_text_buffer_insert(buffer, &txtiter, mnum, -1);
+                gtk_text_buffer_insert(buffer, &txtiter, ".", -1);
+            }
+            /* Update the GUI board */
+            drawGuiBoard(labelBoard, board);	
+            /* Update the game info */
+            gtk_text_buffer_insert(buffer, &txtiter, note, -1);
+
+            player = !player;
+            if (player) {
+                gtk_label_set_text(currentPlayer, "Current player: Black");
+            } else {
+                gtk_label_set_text(currentPlayer, "Current player: White");
+            }
+        }
+        clicks = 0;
+    }
+    return TRUE;
+}
+
+static void activate (GtkApplication* app, gpointer user_data)
 {
     /*fill the board array with pieces*/
     initBoard(board);
@@ -159,105 +256,3 @@ int main (int argc, char **argv)
 
   return status;
 }
-
-int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
-{
-		int i, j;
-		for (i = 0; i < 8; i++) {
-			for (j = 0; j < 8; j++) {
-				gtk_label_set_text(labels[i][j], convertClipieceToGuiPiece(cliBoard[i][j]));
-			}
-		}
-		return 0;
-}
-
-void algebraic_notation(char *note, struct Move mov, int board[][8])
-{
-  int piece = board[mov.currRow][mov.currCol];
-  note[0] = ' ';
-  if (piece == 2 || piece == 8) {
-    note[1] = 'N';
-  } else if (piece == 3 || piece == 9) {
-    note[1] = 'B';
-  } else if (piece == 4 || piece == 10) {
-    note[1] = 'R';
-  } else if (piece == 5 || piece == 11) {
-    note[1] = 'Q';
-  } else if (piece == 6 || piece == 12) {
-    note[1] = 'K';
-  }
-  note[2] = mov.nextRow + 97;
-  note[3] = mov.nextCol + 48;
-  note[4] = 0;
-
-  if (piece == 1 || piece == 7) {
-    note[1] = mov.nextRow + 97;
-    note[2] = mov.nextCol + 48;
-    note[3] = 0;
-  }
-}
-
-static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event,
-			GtkWidget *ebox)
-{
-    // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
-    int left, top, width, height;
-
-    if (!clicks) {
-        gtk_widget_set_name (ebox, "selected");
-        /*get coordinates of eventbox*/
-        gtk_grid_query_child(GTK_GRID(table), ebox,
-                &left, &top, &width, &height);
-        //store the position you move from. It will be used to move the pieces in the board array
-        // subtract 1 from left because the row numbers are part of the label table
-        mov.currCol = left-1;
-        mov.currRow = top;
-        /*save label*/
-        prevEventbox = ebox;
-        /*save the current coordinates*/
-        clicks = 1;
-    } else {
-        /*make move*/
-        gtk_grid_query_child(GTK_GRID(table), ebox,
-                &left, &top, &width, &height);
-        //store the position you move to. It will be used to move the pieces in the board array
-        // subtract 1 from left because the row numbers are part of the label table
-        mov.nextCol = left-1;
-        mov.nextRow = top;
-        /*nolor back to normal*/
-        if ((mov.currCol+mov.currRow)&1){
-            /*odd square, darkbrown color*/
-            //gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
-            gtk_widget_set_name (prevEventbox, "darkbrown");
-        } else {
-            /*even square, lightbrown color*/
-            gtk_widget_set_name (prevEventbox, "lightbrown");
-        }
-        algebraic_notation(note, mov, board);
-        int u = makemove(player, mov, board);
-        if (!u) {
-            buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
-            gtk_text_buffer_get_end_iter(buffer, &txtiter);
-            if (!player) {
-                sprintf(mnum,"%d",++movecnt);
-                gtk_text_buffer_insert(buffer, &txtiter, " ", -1);
-                gtk_text_buffer_insert(buffer, &txtiter, mnum, -1);
-                gtk_text_buffer_insert(buffer, &txtiter, ".", -1);
-            }
-            /* Update the GUI board */
-            drawGuiBoard(labelBoard, board);	
-            /* Update the game info */
-            gtk_text_buffer_insert(buffer, &txtiter, note, -1);
-
-            player = !player;
-            if (player) {
-                gtk_label_set_text(currentPlayer, "Current player: Black");
-            } else {
-                gtk_label_set_text(currentPlayer, "Current player: White");
-            }
-        }
-        clicks = 0;
-    }
-    return TRUE;
-}
-
