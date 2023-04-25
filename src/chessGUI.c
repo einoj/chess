@@ -3,7 +3,7 @@
 #include "int2utf8.h"
 #include <chess.h>
 
-static gboolean button_pressed (GtkWidget*, GtkButton*, GtkLabel *[][8]);
+static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidget *ebox);
 int clicks = 0;
 int player = 0;
 GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
@@ -16,6 +16,7 @@ char mnum[12]; // max int size is 11 chars (if you inlude the - sign) long + 0 c
 struct Move mov;
 int board[8][8];
 int movecnt = 0;
+static GtkLabel *labelBoard[8][8];
 
 static void
 activate (GtkApplication* app,
@@ -30,7 +31,6 @@ activate (GtkApplication* app,
     window = gtk_application_window_new (app);
     gtk_window_set_title(GTK_WINDOW (window), "Chess board");
     gtk_widget_set_size_request(window, 680,350);
-    //table = gtk_grid_new (8,8,TRUE);
     table = gtk_grid_new ();
     GtkStyleContext *context;
     GtkCssProvider *provider = gtk_css_provider_new ();
@@ -41,8 +41,6 @@ activate (GtkApplication* app,
             GTK_STYLE_PROVIDER(provider),
             GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    /*container for the labels of the gui board*/
-    GtkLabel *labelBoard[8][8];
     /*one is larger to make the squares wider*/	
     char *pieces[64] = { "♜", "♞", "♝","♛","♚","♝","♞","♜",
         "♟", "♟", "♟","♟","♟","♟","♟","♟",
@@ -65,6 +63,7 @@ activate (GtkApplication* app,
             labelBoard[i][j]=label;
             gesture = gtk_gesture_click_new();
             eventbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);;
+            gtk_widget_add_controller(eventbox, GTK_EVENT_CONTROLLER(gesture));
             context = gtk_widget_get_style_context (eventbox);
             gtk_style_context_add_provider (context,
                     GTK_STYLE_PROVIDER(provider),
@@ -87,12 +86,10 @@ activate (GtkApplication* app,
                 }
             }
 
-            /*put label into eventbox*/
             gtk_box_append(GTK_BOX (eventbox), (GtkWidget *) label);
-            /*put eventbox into table*/
             gtk_grid_attach((GtkGrid *) table, eventbox,j+1,i,1,1);
 
-            g_signal_connect(gesture, "released", G_CALLBACK (button_pressed), labelBoard);
+            g_signal_connect(gesture, "released", G_CALLBACK (button_pressed), eventbox);
 
             p++;
         }
@@ -146,28 +143,22 @@ activate (GtkApplication* app,
     gtk_grid_attach((GtkGrid *) infogrid, (GtkWidget *) currentPlayer,0,0,1,1);
     gtk_grid_attach((GtkGrid *) hpane, (GtkWidget *) infogrid, 1,0,1,1);
 
-    /*add table to window*/
     gtk_window_set_child(GTK_WINDOW (window), hpane);
     gtk_widget_show(window);
 }
 
-int
-main (int    argc,
-      char **argv)
+int main (int argc, char **argv)
 {
   GtkApplication *app;
   int status;
 
-  app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+  app = gtk_application_new ("org.einoj.chessgui", G_APPLICATION_FLAGS_NONE);
   g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
   status = g_application_run (G_APPLICATION (app), argc, argv);
   g_object_unref (app);
 
   return status;
 }
-
-
-
 
 int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
 {
@@ -194,7 +185,7 @@ void algebraic_notation(char *note, struct Move mov, int board[][8])
     note[1] = 'Q';
   } else if (piece == 6 || piece == 12) {
     note[1] = 'K';
-  } 
+  }
   note[2] = mov.nextRow + 97;
   note[3] = mov.nextCol + 48;
   note[4] = 0;
@@ -206,8 +197,8 @@ void algebraic_notation(char *note, struct Move mov, int board[][8])
   }
 }
 
-static gboolean button_pressed (GtkWidget *ebox, GtkButton *event,
-			GtkLabel *labelBoard[][8])
+static gboolean button_pressed (GtkGestureClick *gesture, GtkButton *event,
+			GtkWidget *ebox)
 {
     // prevEventbox = eventbox;// Just set the prevEventbox to avoid nullpointer exception
     int left, top, width, height;
@@ -237,10 +228,10 @@ static gboolean button_pressed (GtkWidget *ebox, GtkButton *event,
         if ((mov.currCol+mov.currRow)&1){
             /*odd square, darkbrown color*/
             //gtk_widget_override_background_color(prevEventbox, GTK_STATE_NORMAL, &dbrown);
-            gtk_widget_set_name (prevEventbox, "darkbrown"); 
+            gtk_widget_set_name (prevEventbox, "darkbrown");
         } else {
             /*even square, lightbrown color*/
-            gtk_widget_set_name (prevEventbox, "lightbrown"); 
+            gtk_widget_set_name (prevEventbox, "lightbrown");
         }
         algebraic_notation(note, mov, board);
         int u = makemove(player, mov, board);
@@ -258,7 +249,7 @@ static gboolean button_pressed (GtkWidget *ebox, GtkButton *event,
             /* Update the game info */
             gtk_text_buffer_insert(buffer, &txtiter, note, -1);
 
-            player = !player; 
+            player = !player;
             if (player) {
                 gtk_label_set_text(currentPlayer, "Current player: Black");
             } else {
@@ -269,3 +260,4 @@ static gboolean button_pressed (GtkWidget *ebox, GtkButton *event,
     }
     return TRUE;
 }
+
