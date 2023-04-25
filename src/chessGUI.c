@@ -3,18 +3,18 @@
 #include "int2utf8.h"
 #include <chess.h>
 
-int clicks = 0;
-int player = 0;
-GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
-GtkTextBuffer *buffer;
-GtkTextIter txtiter;
-GtkLabel *currentPlayer, *row_label, *col_label;
+static int clicks = 0;
+static int player = 0;
+static GtkWidget *table, *prevEventbox, *hpane, *infogrid, *textview, *scroll_win;
+static GtkTextBuffer *buffer;
+static GtkTextIter txtiter;
+static GtkLabel *currentPlayer;
 
-char note[5];
-char mnum[12]; // max int size is 11 chars (if you inlude the - sign) long + 0 char
-struct Move mov;
-int board[8][8];
-int movecnt = 0;
+static char note[5];
+static char mnum[12]; // max int size is 11 chars (if you inlude the - sign) long + 0 char
+static struct Move mov;
+static int board[8][8];
+static int movecnt = 0;
 static GtkLabel *labelBoard[8][8];
 
 int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
