@@ -29,33 +29,38 @@ int drawGuiBoard(GtkLabel *labels[][8], int cliBoard[][8])
 void algebraic_notation(char *note, struct Move mov, int board[][8])
 {
   int piece = board[mov.currRow][mov.currCol];
-  note[0] = ' ';
+  int captureSquare = board[mov.nextRow][mov.nextCol];
+  char pieceChar;
+  if (piece == wPawn || piece ==bPawn) {
+        if(captureSquare == emptySquare) {
+            sprintf(note," %c%d", mov.nextCol + 97, 8-mov.nextRow);
+            return;
+        }
+        sprintf(note," %cx%c%d", mov.currCol + 97, mov.nextCol + 97, 8-mov.nextRow);
+        return;
+  }
   if (piece == wKnight || piece == bKnight) {
-    note[1] = 'N';
+    pieceChar = 'N';
   } else if (piece == wBishop || piece == bBishop) {
-    note[1] = 'B';
+    pieceChar = 'B';
   } else if (piece == wRook || piece == bRook) {
-    note[1] = 'R';
+    pieceChar = 'R';
   } else if (piece == wQueen || piece == bQueen) {
-    note[1] = 'Q';
-  } else if (piece == wKing || piece == bKing) {
-    note[1] = 'K';
+    pieceChar = 'Q';
+  } else {
+    pieceChar = 'K';
   }
-  note[2] = mov.nextRow + 97;
-  note[3] = mov.nextCol + 48;
-  note[4] = 0;
-
-  if (piece == wPawn || piece == bPawn) {
-    note[1] = mov.nextRow + 97;
-    note[2] = mov.nextCol + 48;
-    note[3] = 0;
+  if(captureSquare == emptySquare) {
+      sprintf(note, " %c%c%d", pieceChar, mov.nextCol + 97, 8-mov.nextRow);
+      return;
   }
+  sprintf(note, " %cx%c%d", pieceChar, mov.nextCol + 97, 8-mov.nextRow);
 }
 
 static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidget *ebox)
 {
     int left, top, width, height;
-    char note[5];
+    char note[6];
     GtkTextIter txtiter;
 
     if (!clicks) {
