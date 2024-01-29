@@ -3,8 +3,8 @@ OBJDIR  = obj
 SRCDIR  = src
 CLIDIR  = cliobj
 INCDIR  = inc
-LDFLAGS = `pkg-config --cflags gtk4` `pkg-config --libs gtk4`
-CFLAGS  = -Wall -Os -s -I${INCDIR}
+LDFLAGS = `pkg-config --libs gtk4`
+CFLAGS  = -Wall -Os -s -I${INCDIR} `pkg-config --cflags gtk4`
 
 SRCS    = $(wildcard $(SRCDIR)/*.c)
 OBJS		= $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
@@ -24,7 +24,7 @@ $(OBJDIR):
 	mkdir -p $@
 
 $(OBJDIR)/chessGUI.o: $(SRCDIR)/chessGUI.c
-	$(CC) $(CFLAGS) $< -c -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $< -c -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(wildcard $(INCDIR)/*.h) Makefile
 	$(CC) $(CFLAGS) $< -c -o $@
