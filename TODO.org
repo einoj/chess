@@ -1,7 +1,8 @@
 * TODO add menu.
-** [ ] option for choosing color.
-** [ ] option for choosing size of board.
-** [ ] save/load functonality.
+** [ ] option for choosing color
+** [ ] option for choosing size of board
+** [ ] save/load functonality
+** [ ] option for changing size of pieces
 * TODO add posibility of loading file with algebraic notation.
 * TODO Write check for king being under attack.
 ** TODO Write check for checkmate.
@@ -9,4 +10,5 @@
 ** DONE Update to using CSS for gtk3, since
 gtk_widget_override_background_color is depracted
 * TODO Add castling functionality
+* TODO Add promotion of pawns
 
