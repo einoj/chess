@@ -10,6 +10,7 @@ SRCS    = $(wildcard $(SRCDIR)/*.c)
 OBJS		= $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
 GUIOBJS = $(filter-out $(OBJDIR)/chessCLI.o,$(OBJS))
 CLIOBJS = $(filter-out $(OBJDIR)/chessGUI.o,$(OBJS))
+TESTOBJS =$(filter-out $(OBJDIR)/chessCLI.o $(OBJDIR)/chessGUI.o,$(OBJS))
 
 all: chessGUI chessCLI
 
@@ -18,6 +19,9 @@ chessGUI: $(GUIOBJS)
 
 chessCLI: $(CLIOBJS) 
 	$(CC) $(CFLAGS) $(CLIOBJS) -o chessCLI 
+
+test: $(TESTOBJS)
+	$(CC) $(CFLAGS) $(TESTOBJS) -Itests/Unity/src tests/Testchess.c tests/Unity/src/unity.o -o testChess
 
 $(OBJS): | $(OBJDIR)
 $(OBJDIR):
