@@ -182,14 +182,13 @@ int checkInput(struct Move mov) {
 
 int makemove(int player, struct Move mov, int board[][8])
 {
-	if (checkInput(mov)) {
-		if (checkColor(mov, player, board)) {
-			if (checkMove(mov, player, board)) {
-				return 0;
-			}
-		}
-	} 
-	return 1;
+    if (checkInput(mov) == 0)
+        return 0;
+    if (checkColor(mov, player, board) == 0)
+        return 0;
+    if (checkMove(mov, player, board) == 0)
+        return 0;
+    return 1;
 }
 
 /* 

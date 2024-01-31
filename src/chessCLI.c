@@ -114,11 +114,11 @@ int main(void) {
 		/*0 is white 1 is black*/
 		do {
             while (getInput(white, &mov, board));
-		} while (makemove(white, mov, board));
+		} while (!makemove(white, mov, board));
 		printBoard(board);
 		do {
             while (getInput(black, &mov, board));
-		} while (makemove(black, mov, board));
+		} while (!makemove(black, mov, board));
 		printBoard(board);
 	}
 	return 0;

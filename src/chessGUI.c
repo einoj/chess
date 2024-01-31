@@ -94,7 +94,7 @@ static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidge
         }
         algebraic_notation(note, mov, board);
         int u = makemove(player, mov, board);
-        if (!u) {
+        if (u) {
             buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
             gtk_text_buffer_get_end_iter(buffer, &txtiter);
             if (!player) {
