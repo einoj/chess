@@ -23,3 +23,4 @@ int squareUnderAttack(struct Move mov, int board[][8]);
 void resetPassantArrays();
 void printBoard(int board[][8]);
 void completemove(struct Move mov, int b[][8]);
+int checkInput(struct Move mov);
