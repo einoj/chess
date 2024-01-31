@@ -1,32 +1,43 @@
-CC      = gcc
-OBJDIR  = obj
-SRCDIR  = src
-CLIDIR  = cliobj
-INCDIR  = inc
-LDFLAGS = `pkg-config --libs gtk4`
-CFLAGS  = -Wall -Os -s -I${INCDIR} `pkg-config --cflags gtk4`
+CC       = gcc
+BUILDDIR = build
+SRCDIR   = src
+CLIDIR   = cliobj
+INCDIR   = inc
+TESTDIR  = tests
+UNITYDIR = $(TESTDIR)/Unity/src
+LDFLAGS  = `pkg-config --libs gtk4`
+GUIFLAGS = `pkg-config --cflags gtk4`
+CFLAGS   = -Wall -Os -s -I${INCDIR}
 
-SRCS    = $(wildcard $(SRCDIR)/*.c)
-OBJS		= $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
-GUIOBJS = $(filter-out $(OBJDIR)/chessCLI.o,$(OBJS))
-CLIOBJS = $(filter-out $(OBJDIR)/chessGUI.o,$(OBJS))
+SRCS     = $(wildcard $(SRCDIR)/*.c)
+OBJS	 = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
+GUIOBJS  = $(filter-out $(BUILDDIR)/chessCLI.o,$(OBJS))
+CLIOBJS  = $(filter-out $(BUILDDIR)/chessGUI.o,$(OBJS))
+TESTOBJS = $(filter-out $(BUILDDIR)/chessCLI.o $(BUILDDIR)/chessGUI.o,$(OBJS))
+TESTOBJS += $(BUILDDIR)/unity.o
 
-all: chessGUI chessCLI
+all: $(BUILDDIR)/chessGUI $(BUILDDIR)/chessCLI
 
-chessGUI: $(GUIOBJS)
-	$(CC) $(CFLAGS) $(GUIOBJS) -o chessGUI $(LDFLAGS)
+$(BUILDDIR)/chessGUI: $(GUIOBJS)
+	$(CC) $(CFLAGS) $(GUIOBJS) $(LDFLAGS) -o $@
 
-chessCLI: $(CLIOBJS) 
-	$(CC) $(CFLAGS) $(CLIOBJS) -o chessCLI 
+$(BUILDDIR)/chessCLI: $(CLIOBJS)
+	$(CC) $(CFLAGS) $(CLIOBJS) -o $@
 
-$(OBJS): | $(OBJDIR)
-$(OBJDIR):
-	mkdir -p $@
+test: $(TESTOBJS)
+	$(CC) $(CFLAGS) $(TESTOBJS) -I$(UNITYDIR) $(TESTDIR)/TestChess.c -o $(BUILDDIR)/testChess
 
-$(OBJDIR)/chessGUI.o: $(SRCDIR)/chessGUI.c
+$(BUILDDIR)/unity.o: $(UNITYDIR)/unity.c
 	$(CC) $(CFLAGS) $< -c -o $@
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(wildcard $(INCDIR)/*.h) Makefile
+$(OBJS): | $(BUILDDIR)
+$(BUILDDIR):
+	mkdir -p $@
+
+$(BUILDDIR)/chessGUI.o: $(SRCDIR)/chessGUI.c
+	$(CC) $(CFLAGS) $(GUIFLAGS) $< -c -o $@
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c $(wildcard $(INCDIR)/*.h) Makefile
 	$(CC) $(CFLAGS) $< -c -o $@
 
 install: 
@@ -34,4 +45,4 @@ install:
 	cp -r style $(DESTDIR)
 
 clean:
-	rm -rf $(OBJDIR)
+	rm -rf $(BUILDDIR)
