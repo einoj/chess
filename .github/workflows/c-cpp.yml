@@ -10,13 +10,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    container: pksadiq/gtk:alpine-amd64
     steps:
     - uses: actions/checkout@v3
       with:
         submodules: true
     - name: installdeps
-      run: sudo apt update && sudo apt install libgtk-4-dev
+      run: apk add make
     - name: make
       run: make
     - name: test
