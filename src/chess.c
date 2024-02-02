@@ -59,7 +59,7 @@ void resetPassantArrays(void) {
 * The second is the player color 0 = white
 * 1 = black.*/
 void setPassant(int column, int player) {
-	if (player) {
+	if (player == black) {
 		enPassantB[column] = 1;
 	} else {
 		enPassantW[column] = 1;
@@ -70,7 +70,7 @@ void setPassant(int column, int player) {
 * Check the opposite color of the current player
 * Pawn must be on its fifth rank*/
 int checkPassant(int row,int column, int player) {
-	if (!player) { // white player
+	if (player == white) {
 		if (row == 3) {
 			return enPassantB[column];
 		}
@@ -87,13 +87,13 @@ int checkPassant(int row,int column, int player) {
 int checkColor(struct Move mov, int player, int b[][8]) {
 	int aPiece = b[mov.currRow][mov.currCol];
 	int dPiece = b[mov.nextRow][mov.nextCol];
-	if (dPiece == 0)
+	if (dPiece == emptySquare)
 		/* checkMove() checks if a piece is being moved so we chan return true from here */
 		return 1;
-	if ((player == 0) && (0 < aPiece && aPiece < 7) && (6 < dPiece && dPiece < 13))
+	if ((player == white) && (wPawn <= aPiece && aPiece < bPawn) && (wKing < dPiece && dPiece <= bKing))
 		/* player is white and attacking piece is white, and defending piece is black */
 		return 1;
-	if ((player == 1) && (6 < aPiece && aPiece < 13) && (0 < dPiece && dPiece < 7))
+	if ((player == black) && (wKing < aPiece && aPiece <= bKing) && (wPawn <= dPiece && dPiece < bPawn))
 		/* or player is black and attacking piece is black, and defending piece is white */
 		return 1;
 	return 0;

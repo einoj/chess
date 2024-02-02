@@ -97,7 +97,7 @@ static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidge
         if (u) {
             buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW (textview));
             gtk_text_buffer_get_end_iter(buffer, &txtiter);
-            if (!player) {
+            if (player == white) {
                 sprintf(mnum,"%d",++movecnt);
                 gtk_text_buffer_insert(buffer, &txtiter, " ", -1);
                 gtk_text_buffer_insert(buffer, &txtiter, mnum, -1);
@@ -109,7 +109,7 @@ static void button_pressed (GtkGestureClick *gesture, GtkButton *event, GtkWidge
             gtk_text_buffer_insert(buffer, &txtiter, note, -1);
 
             player = !player;
-            if (player) {
+            if (player == black) {
                 gtk_label_set_text(currentPlayer, "Current player: Black");
             } else {
                 gtk_label_set_text(currentPlayer, "Current player: White");

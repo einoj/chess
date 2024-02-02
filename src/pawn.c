@@ -1,12 +1,9 @@
 #include <chess.h>
 
 int pawn(struct Move mov, int player, int board[][8]) {
-	int dir;
-	if (player) { /*player is black*/
+	int dir = -1;
+	if (player == black)
 		dir = 1;
-	} else { /*player is white*/
-		dir = -1;
-	}
 	if (mov.nextRow == mov.currRow+dir && mov.nextCol == mov.currCol+1) {
 		/*move north east*/
 		if (checkPosition(mov.nextRow, mov.nextCol, board)) {

@@ -79,15 +79,10 @@ void printBoard(int tmpBoard[][8]) {
 
 int getInput(int player, struct Move *mov, int b[][8]) {
 	char input[10];
-	/*get input from player*/
-	if(player) {
-		/* player = 1 black player*/
+	if(player == black)
 		printf("black's move: ");
-	}
-	else {
-		/* player = 0 white player*/
+	else
 		printf("white's move: ");
-	}
 	if (fgets(input, 8, stdin) == NULL) {
         return 1;
         printf("ERROR: Invalid input\n");

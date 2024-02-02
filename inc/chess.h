@@ -2,6 +2,8 @@ enum pieces { emptySquare,
     wPawn, wKnight, wBishop, wRook, wQueen, wKing,
     bPawn, bKnight, bBishop, bRook, bQueen, bKing
 };
+enum players { white,
+    black };
 struct Move {
     unsigned char currRow;
     unsigned char currCol;
