@@ -5,8 +5,8 @@
 static int board[8][8];
 void setUp(void)
 {
-  /* This is run before EACH TEST */
-  initBoard(board);
+    /* This is run before EACH TEST */
+    initBoard(board);
 }
 
 void tearDown(void)
@@ -116,6 +116,10 @@ void test_false_moves(void)
     b_mov = (struct Move) {.currCol = ltoi('f'), .currRow = ltoi('7'), .nextCol = ltoi('f'), .nextRow = ltoi('4')};
     TEST_ASSERT_EQUAL_MESSAGE(0, makemove(0, w_mov, board), "White bishop c1 to c4 moves like a rook through pawn");
     TEST_ASSERT_EQUAL_MESSAGE(0, makemove(1, b_mov, board), "Black pawn f7 to f4 moves one square too far");
+    w_mov = (struct Move) {.currCol = ltoi('e'), .currRow = ltoi('1'), .nextCol = ltoi('e'), .nextRow = ltoi('2')};
+    b_mov = (struct Move) {.currCol = ltoi('e'), .currRow = ltoi('8'), .nextCol = ltoi('e'), .nextRow = ltoi('7')};
+    TEST_ASSERT_EQUAL_MESSAGE(0, makemove(0, w_mov, board), "White king e1 to e2 captures white pawn");
+    TEST_ASSERT_EQUAL_MESSAGE(0, makemove(1, b_mov, board), "Black king e8 to e7 captures black pawn");
 
     TEST_ASSERT_EQUAL_MEMORY(expected_board, board, 64);
 }
@@ -134,11 +138,11 @@ void test_moves_outside_board(void)
 
 int main(void)
 {
-  UnityBegin("test/TestProductionCode.c");
-  RUN_TEST(test_d2d4_opening, 1);
-  RUN_TEST(test_scholars_mate_wc2023_gangulyVmadaminow, 2);
-  RUN_TEST(test_false_moves, 3);
-  RUN_TEST(test_moves_outside_board, 4);
+    UnityBegin("test/TestProductionCode.c");
+    RUN_TEST(test_d2d4_opening, 1);
+    RUN_TEST(test_scholars_mate_wc2023_gangulyVmadaminow, 2);
+    RUN_TEST(test_false_moves, 3);
+    RUN_TEST(test_moves_outside_board, 4);
 
-  return (UnityEnd());
+    return (UnityEnd());
 }

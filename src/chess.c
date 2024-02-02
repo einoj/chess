@@ -87,12 +87,16 @@ int checkPassant(int row,int column, int player) {
 int checkColor(struct Move mov, int player, int b[][8]) {
 	int aPiece = b[mov.currRow][mov.currCol];
 	int dPiece = b[mov.nextRow][mov.nextCol];
-	if (((player == 0) && ((aPiece > 0 && aPiece < 7) && ((dPiece > 6 && dPiece < 13) || (dPiece == 0)))) || ((player == 1) && ((aPiece > 6 && aPiece < 13) && ((dPiece > 0 && dPiece < 7) || (dPiece == 0))))) {
-		/* player is white and attacking piece is white, and defending piece is black or empty*/
-		/* or player is black and attacking piece is black, and defending piece is white or empty*/
+	if (dPiece == 0)
+		/* checkMove() checks if a piece is being moved so we chan return true from here */
 		return 1;
-	}
-    return 0;
+	if ((player == 0) && (0 < aPiece && aPiece < 7) && (6 < dPiece && dPiece < 13))
+		/* player is white and attacking piece is white, and defending piece is black */
+		return 1;
+	if ((player == 1) && (6 < aPiece && aPiece < 13) && (0 < dPiece && dPiece < 7))
+		/* or player is black and attacking piece is black, and defending piece is white */
+		return 1;
+	return 0;
 }
 
 int checkMove(struct Move mov, int player, int board[][8]) {
