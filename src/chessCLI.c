@@ -5,79 +5,59 @@
 void printBoard(int tmpBoard[][8]) {
 	/*print out the current board and pieces*/
 	int i, j;
-	/*print top edge*/
-	printf(" _________________________\n");
+    printf("\n ─────────────────────────\n");
 	/*count down so white is south black is north*/
 	for (i = 0; i < 8; ++i) {
 		/*print edge of board*/
 		printf("%d│", 8-i);
 		for (j = 0; j < 8; ++j) {
-			if (tmpBoard[i][j] == 1) {
-				/*white pawn*/
+            switch (tmpBoard[i][j]) {
+            case wPawn:
 				printf(" ♙│");
-			}
-			else if (tmpBoard[i][j] == 7) {
-				/*black pawn*/
+                break;
+            case bPawn:
 				printf(" ♟│");
-			}
-			else if (tmpBoard[i][j] == 2) {
-				/*white knight*/
+                break;
+            case wKnight:
 				printf("wN│");
-			}
-			else if (tmpBoard[i][j] == 8) {
-				/*black knight*/
+                break;
+            case bKnight:
 				printf("bN│");
-			}
-			else if (tmpBoard[i][j] == 3) {
-				/*white bishop*/
+                break;
+            case wBishop:
 				printf("wB│");
-			}
-			else if (tmpBoard[i][j] == 9) {
-				/*black knight*/
+                break;
+            case bBishop:
 				printf("bB│");
-			}
-			else if (tmpBoard[i][j] == 4) {
-				/*white Rook*/
+                break;
+            case wRook:
 				printf("wR│");
-			}
-			else if (tmpBoard[i][j] == 10) {
-				/*black Rook*/
+                break;
+            case bRook:
 				printf("bR│");
-			}
-			else if (tmpBoard[i][j] == 5) {
-				/*white Queen*/
+                break;
+            case wQueen:
 				printf("wQ│");
-			}
-			else if (tmpBoard[i][j] == 11) {
-				/*black Queen*/
+                break;
+            case bQueen:
 				printf("bQ│");
-			}
-			else if (tmpBoard[i][j] == 6) {
-				/*white King*/
+                break;
+            case wKing:
 				printf("wK│");
-			}
-			else if (tmpBoard[i][j] == 12) {
-				/*black King*/
+                break;
+            case bKing:
 				printf("bK│");
-			}
-			else {
-				/*empty square*/
+                break;
+            default:
 				printf("  │");
-			}
+            }
 		}
-		/*new row*/
-		if (i > 0) {
-			printf("\n ─────────────────────────\n");
-		}
-		else {
-			printf("\n _________________________\n");
-		}
+        printf("\n ─────────────────────────\n");
 	}
-	/*print bottom row*/
 	printf("   a  b  c  d  e  f  g  h \n");	
 }
 
-int getInput(int player, struct Move *mov, int b[][8]) {
+int getInput(int player, struct Move *mov) {
 	char input[10];
 	if(player == black)
 		printf("black's move: ");
@@ -108,11 +88,11 @@ int main(void) {
 	while (playing) {
 		/*0 is white 1 is black*/
 		do {
-            while (getInput(white, &mov, board));
+            while (getInput(white, &mov));
 		} while (!makemove(white, mov, board));
 		printBoard(board);
 		do {
-            while (getInput(black, &mov, board));
+            while (getInput(black, &mov));
 		} while (!makemove(black, mov, board));
 		printBoard(board);
 	}
