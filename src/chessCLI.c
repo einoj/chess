@@ -2,61 +2,6 @@
 #include "letterToInt.h"
 #include <chess.h>
 
-void printBoard(int tmpBoard[][8]) {
-	/*print out the current board and pieces*/
-	int i, j;
-    printf("\n ─────────────────────────\n");
-	/*count down so white is south black is north*/
-	for (i = 0; i < 8; ++i) {
-		/*print edge of board*/
-		printf("%d│", 8-i);
-		for (j = 0; j < 8; ++j) {
-            switch (tmpBoard[i][j]) {
-            case wPawn:
-				printf(" ♙│");
-                break;
-            case bPawn:
-				printf(" ♟│");
-                break;
-            case wKnight:
-				printf("wN│");
-                break;
-            case bKnight:
-				printf("bN│");
-                break;
-            case wBishop:
-				printf("wB│");
-                break;
-            case bBishop:
-				printf("bB│");
-                break;
-            case wRook:
-				printf("wR│");
-                break;
-            case bRook:
-				printf("bR│");
-                break;
-            case wQueen:
-				printf("wQ│");
-                break;
-            case bQueen:
-				printf("bQ│");
-                break;
-            case wKing:
-				printf("wK│");
-                break;
-            case bKing:
-				printf("bK│");
-                break;
-            default:
-				printf("  │");
-            }
-		}
-        printf("\n ─────────────────────────\n");
-	}
-	printf("   a  b  c  d  e  f  g  h \n");	
-}
-
 int getInput(int player, struct Move *mov) {
 	char input[10];
 	if(player == black)
