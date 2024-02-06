@@ -159,7 +159,7 @@ int checkMove(struct Move mov, int player, int board[][8]) {
         return 0;
 	}
 	else if (piece == wKing || piece == bKing) {
-		if (king(mov, board)) {
+		if (king(player, mov, board)) {
             completemove(mov, board);
 			/*move completed*/
 			return 1;

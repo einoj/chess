@@ -7,7 +7,7 @@ TESTDIR  = tests
 UNITYDIR = $(TESTDIR)/Unity/src
 LDFLAGS  = `pkg-config --libs gtk4`
 GUIFLAGS = `pkg-config --cflags gtk4`
-CFLAGS   = -Wall -Os -s -I${INCDIR}
+CFLAGS   = -Wall -Wextra -Os -s -I${INCDIR}
 
 SRCS     = $(wildcard $(SRCDIR)/*.c)
 OBJS	 = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))

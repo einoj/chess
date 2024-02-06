@@ -136,13 +136,34 @@ void test_moves_outside_board(void)
     TEST_ASSERT_EQUAL(0, checkInput(nextCol_outside));
 }
 
+void test_king_cannot_move_to_square_uder_attack(void)
+{
+    int custom_board[8][8] = {
+        {bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook},
+        {bPawn, bPawn, bPawn, 0, bPawn, bPawn, bPawn, bPawn},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, wKing, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {wPawn, wPawn, wPawn, 0, wPawn, wPawn, wPawn, wPawn},
+        {wRook, wKnight, wBishop, wQueen, 0, wBishop, wKnight, wRook}
+    };
+    struct Move mov = {.currCol = ltoi('d'), .currRow = ltoi('5'), .nextCol = ltoi('d'), .nextRow = ltoi('6')};
+    TEST_ASSERT_EQUAL_MESSAGE(0, makemove(white, mov, custom_board), "White king moved to d6 which is under attack");
+    mov = (struct Move) {.currCol = ltoi('d'), .currRow = ltoi('5'), .nextCol = ltoi('c'), .nextRow = ltoi('5')};
+    TEST_ASSERT_EQUAL_MESSAGE(1, makemove(white, mov, custom_board), "White king can't move to d4.");
+    mov = (struct Move) {.currCol = ltoi('c'), .currRow = ltoi('5'), .nextCol = ltoi('c'), .nextRow = ltoi('6')};
+    TEST_ASSERT_EQUAL_MESSAGE(0, makemove(white, mov, custom_board), "White king moved to c4, which is under attack by a pawn");
+}
+
 int main(void)
 {
-    UnityBegin("test/TestProductionCode.c");
+    UnityBegin("Test chess.c");
     RUN_TEST(test_d2d4_opening, 1);
     RUN_TEST(test_scholars_mate_wc2023_gangulyVmadaminow, 2);
     RUN_TEST(test_false_moves, 3);
     RUN_TEST(test_moves_outside_board, 4);
+    RUN_TEST(test_king_cannot_move_to_square_uder_attack, 5);
 
     return (UnityEnd());
 }
