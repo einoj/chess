@@ -162,6 +162,11 @@ void test_checkInput(void)
     TEST_ASSERT_EQUAL_MESSAGE(0, checkInput(move), "Negative numbers are illegal, but were excepted");
 }
 
+void test_pgnParser(void)
+{
+    pgnParser("gameDB/wang_arngrimsson_2008.pgn");
+}
+
 int main(void)
 {
     UnityBegin("Test chess.c");
@@ -171,6 +176,7 @@ int main(void)
     RUN_TEST(test_moves_outside_board, 4);
     RUN_TEST(test_king_cannot_move_to_square_uder_attack, 5);
     RUN_TEST(test_checkInput, 6);
+    RUN_TEST(test_pgnParser, 6);
 
     return (UnityEnd());
 }

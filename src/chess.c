@@ -260,3 +260,36 @@ void printBoard(int tmpBoard[][8])
     }
     printf("   a  b  c  d  e  f  g  h \n");
 }
+
+int pgnParser(char *pathname)
+{
+    FILE *pgn_file = fopen(pathname, "r");
+    char line[1024];
+    char *p = NULL;
+    char *white_move = NULL;
+    char *black_move = NULL;
+    while(fgets(line, 1024, pgn_file) != NULL)
+    {
+        p = strtok(line," ");
+        if (p[0] == '[')
+            continue;
+        while(p != NULL)
+        {
+            printf("%s ",p); /* your word */
+            white_move = strtok(NULL," ");
+            if (white_move == NULL) {
+                p = NULL;
+                continue;
+            }
+            printf("white move: %s ",white_move);
+            black_move= strtok(NULL," ");
+            if (black_move == NULL) {
+                p = NULL;
+                continue;
+            }
+            printf("black move: %s\n",black_move);
+            p = strtok(NULL," ");
+        }
+    }
+    printf("\n "); /* your word */
+}

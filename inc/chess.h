@@ -33,3 +33,4 @@ void printBoard(int board[][8]);
 void completemove(struct Move mov, int b[][8]);
 int checkInput(struct Move mov);
 int checkColor(struct Move mov, int player, int b[][8]);
+int pgnParser(char *filename);
