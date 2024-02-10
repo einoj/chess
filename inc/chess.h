@@ -1,7 +1,9 @@
+// clang-format off
 enum pieces { emptySquare,
     wPawn, wKnight, wBishop, wRook, wQueen, wKing,
     bPawn, bKnight, bBishop, bRook, bQueen, bKing
 };
+// clang-format on
 enum players { white,
     black };
 struct Square {
