@@ -18,7 +18,7 @@ struct Move {
 };
 int makemove(int player, struct Move mov, int board[][8]);
 int rook(struct Move mov, int board[][8]);
-int knight(struct Move mov, int board[][8]);
+int knight(struct Move mov);
 int bishop(struct Move mov, int board[][8]);
 int queen(struct Move mov, int board[][8]);
 int king(int player, struct Move mov, int board[][8]);

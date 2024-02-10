@@ -1,6 +1,6 @@
 #include <chess.h>
 
-int knight(struct Move mov, int board[][8])
+int knight(struct Move mov)
 {
     if (mov.nextRow == mov.currRow + 1 && mov.nextCol == mov.currCol + 2) {
         /*move 1 north 2 east*/
