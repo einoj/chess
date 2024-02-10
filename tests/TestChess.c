@@ -156,6 +156,12 @@ void test_king_cannot_move_to_square_uder_attack(void)
     TEST_ASSERT_EQUAL_MESSAGE(0, makemove(white, mov, custom_board), "White king moved to c4, which is under attack by a pawn");
 }
 
+void test_checkInput(void)
+{
+    struct Move move = { .currCol = -1, .currRow = -2, .nextCol = -3, .nextRow = -4 };
+    TEST_ASSERT_EQUAL_MESSAGE(0, checkInput(move), "Negative numbers are illegal, but were excepted");
+}
+
 int main(void)
 {
     UnityBegin("Test chess.c");
@@ -164,6 +170,7 @@ int main(void)
     RUN_TEST(test_false_moves, 3);
     RUN_TEST(test_moves_outside_board, 4);
     RUN_TEST(test_king_cannot_move_to_square_uder_attack, 5);
+    RUN_TEST(test_checkInput, 6);
 
     return (UnityEnd());
 }

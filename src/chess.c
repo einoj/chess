@@ -172,13 +172,13 @@ int checkMove(struct Move mov, int player, int board[][8])
 int checkInput(struct Move mov)
 {
     /*check if the input coordinates is on board*/
-    if (mov.currRow < 0 || mov.currRow > 8)
+    if (mov.currRow > 8)
         return 0;
-    if (mov.currCol < 0 || mov.currCol > 8)
+    if (mov.currCol > 8)
         return 0;
-    if (mov.nextRow < 0 || mov.nextRow > 8)
+    if (mov.nextRow > 8)
         return 0;
-    if (mov.nextCol < 0 || mov.nextCol > 8)
+    if (mov.nextCol > 8)
         return 0;
     return 1;
 }
