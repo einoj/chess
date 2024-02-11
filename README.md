@@ -25,6 +25,15 @@ In addition to `libgtk-4-dev` the project needs `make` and `gcc` to build.
 
 Run `make` in the repository directory, this will produce two binaries. One commandline version of the game `chessCLI` and a GTK-4 GUI version `chessGUI`.
 
+# Debugging
+A debug build can be made using make with debug as parameter, then debugged
+with gdb. Currently only debugging of chessCLI is supported, but that's fine
+since they use the same backend.
+```
+make debug
+gdb -tui ./build/debug/chessCLI
+```
+
 # GTK-3
 
 If you want to build with GTK-3, checkout tag `0.1.0`.
