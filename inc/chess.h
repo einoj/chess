@@ -34,3 +34,4 @@ void completemove(struct Move mov, int b[][8]);
 int checkInput(struct Move mov);
 int checkColor(struct Move mov, int player, int b[][8]);
 int pgnParser(char *filename);
+int convertAlgNotation(char *token, int player, int board[][8], struct Move* mov);

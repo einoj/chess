@@ -1,4 +1,5 @@
 #include <chess.h>
+#include <letterToInt.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -292,4 +293,72 @@ int pgnParser(char *pathname)
         }
     }
     printf("\n "); /* your word */
+}
+
+int convertAlgNotation(char *token, int player, int board[][8], struct Move* mov)
+{
+    if (token[2] == 0) {
+        // pawn move
+        mov->nextCol = ltoi(token[0]);
+        mov->nextRow = ltoi(token[1]);
+        if (mov->nextCol == 42 || mov->nextRow == 42) {
+            return -1;
+        }
+        if (player == white) {
+            if (board[mov->nextRow + 1][mov->nextCol] == wPawn) {
+                mov->currRow = mov->nextRow + 1;
+                mov->currCol = mov->nextCol;
+                return 0;
+            } else if (board[mov->nextRow + 2][mov->nextCol] == wPawn) {
+                mov->currRow = mov->nextRow + 2;
+                mov->currCol = mov->nextCol;
+                return 0;
+            }
+                return -1;
+        } else {
+            if (board[mov->nextRow - 1][mov->nextCol] == bPawn) {
+                mov->currRow = mov->nextRow - 1;
+                mov->currCol = mov->nextCol;
+                return 0;
+            } else if (board[mov->nextRow - 2][mov->nextCol] == bPawn) {
+                mov->currRow = mov->nextRow - 2;
+                mov->currCol = mov->nextCol;
+                return 0;
+            }
+                return -1;
+        }
+        printf("%s\n", token);
+    } else if (token[0] == 'N') {
+        // knight move
+        printf("%s\n", token);
+    } else if (token[0] == 'Q') {
+        //queen move
+    } else if (token[0] == 'K') {
+        // king move
+    } else if (token[0] == 'B') {
+        //bishop move
+    } else if (token[0] == 'R') {
+        //rook move
+    } else if (token[1] == 'x') {
+        // pawn capture
+        mov->currCol = ltoi(token[0]);
+        if (mov->currCol == 42)
+            return - 1;
+        mov->nextCol = ltoi(token[2]);
+        mov->nextRow = ltoi(token[3]);
+        if (mov->nextCol == 42 || mov->nextRow == 42) {
+            return - 1;
+        }
+        if (player == white) {
+            mov->currRow = mov->nextRow + 1;
+        } else {
+            mov->currRow = mov->nextRow - 1;
+        }
+    } else if (token[2] == '=') {
+        // pawn promotion
+    } else if (strncmp(token, "O-O", 3)) {
+        // kingside castle
+    } else if (strncmp(token, "O-O-O", 5)) {
+    }
+    return 0;
 }
