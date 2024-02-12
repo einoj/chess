@@ -108,63 +108,18 @@ int checkMove(struct Move mov, int player, int board[][8])
 {
     /*get the piece at the given coordinate*/
     int piece = board[mov.currRow][mov.currCol];
-    /*hack for making 2 step pawn work*/
-    int tmp;
     if (piece == wPawn || piece == bPawn) {
-        tmp = pawn(mov, player, board);
-        if (tmp == 1) {
-            /*The move is also made if pawn() returns 2*/
-            /*some extra processing is needed and therefore pawn makes the move itself*/
-            /*This is because of how pawn always called complete before*/
-            completemove(mov, board);
-            /*move completed*/
-            return 1;
-        } else if (tmp == 2) {
-            /*two step move*/
-            return 1;
-        }
-        /*invalid move*/
-        return 0;
+        return pawn(mov, player, board);
     } else if (piece == wKnight || piece == bKnight) {
-        if (knight(mov)) {
-            completemove(mov, board);
-            /*move completed*/
-            return 1;
-        }
-        /*invalid move*/
-        return 0;
+        return knight(mov);
     } else if (piece == wBishop || piece == bBishop) {
-        if (bishop(mov, board)) {
-            completemove(mov, board);
-            /*move completed*/
-            return 1;
-        }
-        /*invalid move*/
-        return 0;
+        return bishop(mov, board);
     } else if (piece == wRook || piece == bRook) {
-        if (rook(mov, board)) {
-            completemove(mov, board);
-            /*move completed*/
-            return 1;
-        }
-        /*invalid move*/
-        return 0;
+        return rook(mov, board);
     } else if (piece == wQueen || piece == bQueen) {
-        if (queen(mov, board)) {
-            completemove(mov, board);
-            /*move completed*/
-            return 1;
-        }
-        /*invalid move*/
-        return 0;
+        return queen(mov, board);
     } else if (piece == wKing || piece == bKing) {
-        if (king(player, mov, board)) {
-            completemove(mov, board);
-            /*move completed*/
-            return 1;
-        }
-        /*invalid move*/
-        return 0;
+        return king(player, mov, board);
     }
     /* invalid move */
     return 0;
@@ -190,8 +145,14 @@ int makemove(int player, struct Move mov, int board[][8])
         return 0;
     if (checkColor(mov, player, board) == 0)
         return 0;
-    if (checkMove(mov, player, board) == 0)
+    int ret = checkMove(mov, player, board);
+    if (ret == 0)
         return 0;
+    completemove(mov, board);
+    /* Set passant after the move is made
+     * because completemove resets the passant arrays. */
+    if (ret == 2)
+        setPassant(mov.currCol, player);
     return 1;
 }
 

@@ -44,11 +44,7 @@ int pawn(struct Move mov, int player, int board[][8])
         /*Move two steps north*/
         if (!checkPosition(mov.nextRow, mov.nextCol, board) && !checkPosition(mov.nextRow - dir, mov.nextCol, board) && (mov.currRow == 1 || mov.currRow == 6)) {
             /*No piece at new position, middle position, and not moved, therfore move is leagal*/
-            completemove(mov, board);
-            /*set the previous collumn position to the
-             * pessant array. This is done after the move is made
-             * because completemove resets the pessant arrays.*/
-            setPassant(mov.currCol, player);
+            /* return 2 for setting enpassant array */
             return 2;
         }
         /*illegal move*/
