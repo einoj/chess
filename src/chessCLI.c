@@ -21,29 +21,23 @@ int getInput(int player, struct Move* mov)
     return 0;
 }
 
+void playerLoop(int player, int board[][8])
+{
+    struct Move mov;
+    printBoard(board);
+    do {
+        while (getInput(player, &mov))
+            ;
+    } while (!makemove(player, mov, board));
+}
+
 int main(void)
 {
-    int playing = 1;
-    struct Move mov;
-    int white = 0;
-    int black = 1;
     int board[8][8];
-
     initBoard(board);
-    printBoard(board);
-
-    while (playing) {
-        /*0 is white 1 is black*/
-        do {
-            while (getInput(white, &mov))
-                ;
-        } while (!makemove(white, mov, board));
-        printBoard(board);
-        do {
-            while (getInput(black, &mov))
-                ;
-        } while (!makemove(black, mov, board));
-        printBoard(board);
+    while (1) {
+        playerLoop(white, board);
+        playerLoop(black, board);
     }
     return 0;
 }
