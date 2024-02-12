@@ -20,7 +20,7 @@ int getInput(int player, struct Move* mov, int board[][8])
 
     input[strcspn(input, "\n")] = 0;
     if (alg_input) {
-        convertAlgNotation(input, player, board, mov);
+        return convertAlgNotation(input, player, board, mov);
     } else {
         mov->currCol = ltoi(input[0]);
         mov->currRow = ltoi(input[1]);

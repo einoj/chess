@@ -223,40 +223,38 @@ void printBoard(int tmpBoard[][8])
     printf("   a  b  c  d  e  f  g  h \n");
 }
 
-int pgnParser(char *pathname)
+int pgnParser(char* pathname)
 {
-    FILE *pgn_file = fopen(pathname, "r");
+    FILE* pgn_file = fopen(pathname, "r");
     char line[1024];
-    char *p = NULL;
-    char *white_move = NULL;
-    char *black_move = NULL;
-    while(fgets(line, 1024, pgn_file) != NULL)
-    {
-        p = strtok(line," ");
+    char* p = NULL;
+    char* white_move = NULL;
+    char* black_move = NULL;
+    while (fgets(line, 1024, pgn_file) != NULL) {
+        p = strtok(line, " ");
         if (p[0] == '[')
             continue;
-        while(p != NULL)
-        {
-            printf("%s ",p); /* your word */
-            white_move = strtok(NULL," ");
+        while (p != NULL) {
+            printf("%s ", p); /* your word */
+            white_move = strtok(NULL, " ");
             if (white_move == NULL) {
                 p = NULL;
                 continue;
             }
-            printf("white move: %s ",white_move);
-            black_move= strtok(NULL," ");
+            printf("white move: %s ", white_move);
+            black_move = strtok(NULL, " ");
             if (black_move == NULL) {
                 p = NULL;
                 continue;
             }
-            printf("black move: %s\n",black_move);
-            p = strtok(NULL," ");
+            printf("black move: %s\n", black_move);
+            p = strtok(NULL, " ");
         }
     }
     printf("\n "); /* your word */
 }
 
-int convertAlgNotation(char *token, int player, int board[][8], struct Move* mov)
+int convertAlgNotation(char* token, int player, int board[][8], struct Move* mov)
 {
     if (token[2] == 0) {
         // pawn move
@@ -275,7 +273,7 @@ int convertAlgNotation(char *token, int player, int board[][8], struct Move* mov
                 mov->currCol = mov->nextCol;
                 return 0;
             }
-                return -1;
+            return -1;
         } else {
             if (board[mov->nextRow - 1][mov->nextCol] == bPawn) {
                 mov->currRow = mov->nextRow - 1;
@@ -286,29 +284,46 @@ int convertAlgNotation(char *token, int player, int board[][8], struct Move* mov
                 mov->currCol = mov->nextCol;
                 return 0;
             }
-                return -1;
+            return -1;
         }
         printf("%s\n", token);
-    } else if (token[0] == 'N') {
-        // knight move
-        printf("%s\n", token);
+    }
+
+    int piece = emptySquare;
+    if (token[0] == 'N') {
+        if (player == white)
+            piece = wKnight;
+        else
+            piece = bKnight;
     } else if (token[0] == 'Q') {
-        //queen move
+        if (player == white)
+            piece = wQueen;
+        else
+            piece = bQueen;
     } else if (token[0] == 'K') {
-        // king move
+        if (player == white)
+            piece = wKing;
+        else
+            piece = bKing;
     } else if (token[0] == 'B') {
-        //bishop move
+        if (player == white)
+            piece = wBishop;
+        else
+            piece = bBishop;
     } else if (token[0] == 'R') {
-        //rook move
+        if (player == white)
+            piece = wRook;
+        else
+            piece = bRook;
     } else if (token[1] == 'x') {
         // pawn capture
         mov->currCol = ltoi(token[0]);
         if (mov->currCol == 42)
-            return - 1;
+            return -1;
         mov->nextCol = ltoi(token[2]);
         mov->nextRow = ltoi(token[3]);
         if (mov->nextCol == 42 || mov->nextRow == 42) {
-            return - 1;
+            return -1;
         }
         if (player == white) {
             mov->currRow = mov->nextRow + 1;
@@ -321,5 +336,23 @@ int convertAlgNotation(char *token, int player, int board[][8], struct Move* mov
         // kingside castle
     } else if (strncmp(token, "O-O-O", 5)) {
     }
-    return 0;
+
+    // King, Queen, Rook, Knight or Bishop moving
+    mov->nextCol = ltoi(token[1]);
+    mov->nextRow = ltoi(token[2]);
+    if (mov->nextCol == 42 || mov->nextRow == 42)
+        return -1;
+    // Looking through the whole board for now
+    // Should probably optimize this at some point.
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j] == piece) {
+                mov->currRow = i;
+                mov->currCol = j;
+                if (checkMove(*mov, player, board))
+                    return 0;
+            }
+        }
+    }
+    return -1;
 }
