@@ -2,6 +2,8 @@
 #include <chess.h>
 #include <stdio.h>
 
+#define CLEAR "\033[2J\033[1;1H"
+
 int getInput(int player, struct Move* mov)
 {
     char input[10];
@@ -24,6 +26,7 @@ int getInput(int player, struct Move* mov)
 void playerLoop(int player, int board[][8])
 {
     struct Move mov;
+    printf(CLEAR);
     printBoard(board);
     do {
         while (getInput(player, &mov))
