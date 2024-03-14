@@ -153,7 +153,7 @@ int makemove(int player, struct Move mov, int board[][8])
      * because completemove resets the passant arrays. */
     if (ret == 2)
         setPassant(mov.currCol, player);
-    return 1;
+    return ret;
 }
 
 /*
