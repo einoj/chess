@@ -18,10 +18,11 @@ CLIOBJS  = $(filter-out $(BUILDDIR)/chessGUI.o,$(OBJS))
 DBGOBJS  = $(patsubst $(BUILDDIR)%,$(DBGDIR)%,$(CLIOBJS))
 TESTOBJS = $(filter-out $(BUILDDIR)/chessCLI.o $(BUILDDIR)/chessGUI.o,$(OBJS))
 TESTOBJS += $(BUILDDIR)/unity.o
+DBGTESTOBJS = $(patsubst $(BUILDDIR)%,$(DBGDIR)%,$(TESTOBJS))
 
 all: $(BUILDDIR)/chessGUI $(BUILDDIR)/chessCLI
 
-debug: $(DBGDIR)/chessCLI
+debug: $(DBGDIR)/chessCLI debugtest
 
 $(BUILDDIR)/chessGUI: $(GUIOBJS)
 	$(CC) $(CFLAGS) $(GUIOBJS) $(LDFLAGS) -o $@
@@ -29,11 +30,17 @@ $(BUILDDIR)/chessGUI: $(GUIOBJS)
 $(BUILDDIR)/chessCLI: $(CLIOBJS)
 	$(CC) $(CFLAGS) $(CLIOBJS) -o $@
 
+debugtest: $(DBGTESTOBJS)
+	$(CC) $(DBGFLAGS) $(DBGTESTOBJS) -I$(UNITYDIR) $(TESTDIR)/TestChess.c -o $(DBGDIR)/testChess
+
 test: $(TESTOBJS)
 	$(CC) $(CFLAGS) $(TESTOBJS) -I$(UNITYDIR) $(TESTDIR)/TestChess.c -o $(BUILDDIR)/testChess
 
 $(BUILDDIR)/unity.o: $(UNITYDIR)/unity.c
 	$(CC) $(CFLAGS) $< -c -o $@
+
+$(DBGDIR)/unity.o: $(UNITYDIR)/unity.c
+	$(CC) $(DBGFLAGS) $< -c -o $@
 
 $(OBJS): | $(BUILDDIR)
 $(BUILDDIR):
