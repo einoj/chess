@@ -88,18 +88,24 @@ int checkPassant(int row, int column, int player)
     return 0;
 }
 
+inline int pieceOwnedByPlayer(int player, int piece)
+{
+    if ((player == white) && (wPawn <= piece && piece < bPawn))
+        return 1;
+    if ((player == black) && (wKing < piece && piece <= bKing))
+        return 1;
+    return 0;
+}
+
 int checkColor(struct Move mov, int player, int b[][8])
 {
-    int aPiece = b[mov.currRow][mov.currCol];
-    int dPiece = b[mov.nextRow][mov.nextCol];
-    if (dPiece == emptySquare)
-        /* checkMove() checks if a piece is being moved so we chan return true from here */
+    int attacker = b[mov.currRow][mov.currCol];
+    int defender = b[mov.nextRow][mov.nextCol];
+    if (defender == emptySquare)
         return 1;
-    if ((player == white) && (wPawn <= aPiece && aPiece < bPawn) && (wKing < dPiece && dPiece <= bKing))
-        /* player is white and attacking piece is white, and defending piece is black */
+    if (pieceOwnedByPlayer(white, attacker) && pieceOwnedByPlayer(black, defender))
         return 1;
-    if ((player == black) && (wKing < aPiece && aPiece <= bKing) && (wPawn <= dPiece && dPiece < bPawn))
-        /* or player is black and attacking piece is black, and defending piece is white */
+    if (pieceOwnedByPlayer(black, attacker) && pieceOwnedByPlayer(white, defender))
         return 1;
     return 0;
 }

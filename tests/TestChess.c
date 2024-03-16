@@ -167,6 +167,20 @@ void test_pgnParser(void)
     pgnParser("gameDB/wang_arngrimsson_2008.pgn");
 }
 
+void test_black_attacking_black(void)
+{
+    struct Move mov;
+    convertAlgNotation("Ra7", black, board, &mov);
+    TEST_ASSERT_EQUAL_MESSAGE(0, makemove(black, mov, board), "Black rook killed a black pawn.");
+}
+
+void test_white_attacking_white(void)
+{
+    struct Move mov;
+    convertAlgNotation("Ra2", white, board, &mov);
+    TEST_ASSERT_EQUAL_MESSAGE(0, makemove(white, mov, board), "White rook killed a white pawn.");
+}
+
 int main(void)
 {
     UnityBegin("Test chess.c");
@@ -177,6 +191,8 @@ int main(void)
     RUN_TEST(test_king_cannot_move_to_square_uder_attack, 5);
     RUN_TEST(test_checkInput, 6);
     RUN_TEST(test_pgnParser, 6);
+    RUN_TEST(test_black_attacking_black, 7);
+    RUN_TEST(test_white_attacking_white, 8);
 
     return (UnityEnd());
 }
