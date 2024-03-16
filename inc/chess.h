@@ -35,4 +35,5 @@ int checkInput(struct Move mov);
 int checkColor(struct Move mov, int player, int b[][8]);
 int pgnParser(char *filename);
 int convertAlgNotation(char *token, int player, int board[][8], struct Move* mov);
-inline int pieceOwnedByPlayer(int player, int piece);
+int pieceOwnedByPlayer(int player, int piece);
+int checkPawnPromotion(int player, struct Square square, int promot_to_piece, int board[][8]);

@@ -88,7 +88,7 @@ int checkPassant(int row, int column, int player)
     return 0;
 }
 
-inline int pieceOwnedByPlayer(int player, int piece)
+int pieceOwnedByPlayer(int player, int piece)
 {
     if ((player == white) && (wPawn <= piece && piece < bPawn))
         return 1;
@@ -171,6 +171,27 @@ void completemove(struct Move mov, int b[][8])
     b[mov.nextRow][mov.nextCol] = b[mov.currRow][mov.currCol];
     b[mov.currRow][mov.currCol] = 0;
     resetPassantArrays();
+}
+
+int checkPawnPromotion(int player, struct Square square, int promote_to_piece, int board[][8])
+{
+    if (!pieceOwnedByPlayer(player, board[square.row][square.col]))
+        return 0;
+    if (!pieceOwnedByPlayer(player, promote_to_piece))
+        return 0;
+    if (player == white) {
+        if (square.row != 0)
+            return 0;
+        if (promote_to_piece == wPawn || promote_to_piece == wKing)
+            return 0;
+    }
+    if (player == black) {
+        if (square.row != 7)
+            return 0;
+        if (promote_to_piece == bPawn || promote_to_piece == bKing)
+            return 0;
+    }
+    return 1;
 }
 
 void printBoard(int tmpBoard[][8])

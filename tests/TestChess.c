@@ -181,6 +181,48 @@ void test_white_attacking_white(void)
     TEST_ASSERT_EQUAL_MESSAGE(0, makemove(white, mov, board), "White rook killed a white pawn.");
 }
 
+void test_pawn_promotion(void)
+{
+
+    int custom_board[8][8] = {
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn, wPawn },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+        { bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn, bPawn },
+        { 0, 0, 0, 0, 0, 0, 0, 0 },
+    };
+    struct Move mov;
+    struct Square square = { .row = 1, .col = 0 };
+    for (int piece = wKnight; piece < wKing; piece++)
+        TEST_ASSERT_EQUAL_MESSAGE(0, checkPawnPromotion(white, square, piece, custom_board), "Illegal Promotion, pawm should be on last rank");
+    convertAlgNotation("a8", white, custom_board, &mov);
+    TEST_ASSERT_NOT_EQUAL_MESSAGE(0, makemove(white, mov, custom_board), "White pawn couldn't move to last rank.");
+    square.row = 0;
+    for (int piece = wKnight; piece < wKing; piece++)
+        TEST_ASSERT_EQUAL_MESSAGE(1, checkPawnPromotion(white, square, piece, custom_board), "Pawn Promotion should be legal");
+    for (int piece = bPawn; piece <= bKing; piece++)
+        TEST_ASSERT_EQUAL_MESSAGE(0, checkPawnPromotion(black, square, piece, custom_board), "Promotion from white piece to black should be legal");
+    TEST_ASSERT_EQUAL_MESSAGE(0, checkPawnPromotion(white, square, wKing, custom_board), "Pawn Promotion to king should be llegal");
+    TEST_ASSERT_EQUAL_MESSAGE(0, checkPawnPromotion(white, square, wPawn, custom_board), "Pawn Promotion to pawn should be llegal");
+
+    square.row = 6;
+    square.col = 7;
+    for (int piece = bKnight; piece < bKing; piece++)
+        TEST_ASSERT_EQUAL_MESSAGE(0, checkPawnPromotion(black, square, piece, custom_board), "Illegal Promotion, pawm should be on last rank");
+    convertAlgNotation("h1", black, custom_board, &mov);
+    TEST_ASSERT_NOT_EQUAL_MESSAGE(0, makemove(black, mov, custom_board), "Black pawn couldn't move to last rank.");
+    square.row = 7;
+    for (int piece = bKnight; piece < bKing; piece++)
+        TEST_ASSERT_EQUAL_MESSAGE(1, checkPawnPromotion(black, square, piece, custom_board), "Pawn Promotion should be legal");
+    for (int piece = wPawn; piece <= wKing; piece++)
+        TEST_ASSERT_EQUAL_MESSAGE(0, checkPawnPromotion(black, square, piece, custom_board), "Promotion from black piece to white should be legal");
+    TEST_ASSERT_EQUAL_MESSAGE(0, checkPawnPromotion(black, square, bKing, custom_board), "Pawn Promotion to king should be llegal");
+    TEST_ASSERT_EQUAL_MESSAGE(0, checkPawnPromotion(black, square, bPawn, custom_board), "Pawn Promotion to pawn should be llegal");
+}
+
 int main(void)
 {
     UnityBegin("Test chess.c");
@@ -193,6 +235,7 @@ int main(void)
     RUN_TEST(test_pgnParser, 6);
     RUN_TEST(test_black_attacking_black, 7);
     RUN_TEST(test_white_attacking_white, 8);
+    RUN_TEST(test_pawn_promotion, 9);
 
     return (UnityEnd());
 }
