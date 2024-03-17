@@ -93,8 +93,8 @@ static void button_pressed(GtkGestureClick* gesture, GtkButton* event, GtkWidget
             gtk_widget_set_name(prevEventbox, "lightbrown");
         }
         algebraic_notation(note, mov, board);
-        int u = makemove(player, mov, board);
-        if (u) {
+        int ret_makemove = makemove(player, mov, board);
+        if (ret_makemove) {
             buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
             gtk_text_buffer_get_end_iter(buffer, &txtiter);
             if (player == white) {
@@ -107,6 +107,20 @@ static void button_pressed(GtkGestureClick* gesture, GtkButton* event, GtkWidget
             drawGuiBoard(labelBoard, board);
             /* Update the game info */
             gtk_text_buffer_insert(buffer, &txtiter, note, -1);
+
+            if (ret_makemove == 3) {
+                GtkWidget *pop = gtk_popover_new();
+                gtk_widget_set_parent(pop, ebox);
+                GtkWidget *knight_label = gtk_label_new("♘");
+                GtkWidget *bishop_label = gtk_label_new("♗");
+                GtkWidget *rook_label = gtk_label_new("♖");
+                GtkWidget *queen_label = gtk_label_new("♕");
+                gtk_popover_set_child(GTK_POPOVER(pop), knight_label);
+                gtk_popover_set_child(GTK_POPOVER(pop), bishop_label);
+                gtk_popover_set_child(GTK_POPOVER(pop), rook_label);
+                gtk_popover_set_child(GTK_POPOVER(pop), queen_label);
+                gtk_popover_popup(GTK_POPOVER(pop));
+            }
 
             player = !player;
             if (player == black) {
