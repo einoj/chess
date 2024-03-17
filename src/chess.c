@@ -173,7 +173,7 @@ void completemove(struct Move mov, int b[][8])
     resetPassantArrays();
 }
 
-int checkPawnPromotion(int player, struct Square square, int promote_to_piece, int board[][8])
+int promotePawn(int player, struct Square square, int promote_to_piece, int board[][8])
 {
     if (!pieceOwnedByPlayer(player, board[square.row][square.col]))
         return 0;
@@ -191,6 +191,7 @@ int checkPawnPromotion(int player, struct Square square, int promote_to_piece, i
         if (promote_to_piece == bPawn || promote_to_piece == bKing)
             return 0;
     }
+    board[square.row][square.col] = promote_to_piece;
     return 1;
 }
 
