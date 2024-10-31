@@ -199,7 +199,7 @@ void printBoard(int tmpBoard[][8])
 {
     /*print out the current board and pieces*/
     int i, j;
-    printf("\n ─────────────────────────\n");
+    printf("\n ┌───┬───┬───┬───┬───┬───┬───┬───┐\n");
     /*count down so white is south black is north*/
     for (i = 0; i < 8; ++i) {
         /*print edge of board*/
@@ -207,47 +207,49 @@ void printBoard(int tmpBoard[][8])
         for (j = 0; j < 8; ++j) {
             switch (tmpBoard[i][j]) {
             case wPawn:
-                printf(" ♙│");
+                printf(" ♙ │");
                 break;
             case bPawn:
-                printf(" ♟│");
+                printf(" ♟ │");
                 break;
             case wKnight:
-                printf("wN│");
+                printf("wN │");
                 break;
             case bKnight:
-                printf("bN│");
+                printf("bN │");
                 break;
             case wBishop:
-                printf("wB│");
+                printf("wB │");
                 break;
             case bBishop:
-                printf("bB│");
+                printf("bB │");
                 break;
             case wRook:
-                printf("wR│");
+                printf("wR │");
                 break;
             case bRook:
-                printf("bR│");
+                printf("bR │");
                 break;
             case wQueen:
-                printf("wQ│");
+                printf("wQ │");
                 break;
             case bQueen:
-                printf("bQ│");
+                printf("bQ │");
                 break;
             case wKing:
-                printf("wK│");
+                printf("wK │");
                 break;
             case bKing:
-                printf("bK│");
+                printf("bK │");
                 break;
             default:
-                printf("  │");
+                printf("   │");
             }
         }
-        printf("\n ─────────────────────────\n");
+        if (i < 7)
+            printf("\n ├───┼───┼───┼───┼───┼───┼───┼───┤\n");
     }
+    printf("\n └───┴───┴───┴───┴───┴───┴───┴───┘\n");
     printf("   a  b  c  d  e  f  g  h \n");
 }
 
