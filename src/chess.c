@@ -213,34 +213,34 @@ void printBoard(int tmpBoard[][8])
                 printf(" ♟ │");
                 break;
             case wKnight:
-                printf("wN │");
+                printf(" ♘ │");
                 break;
             case bKnight:
-                printf("bN │");
+                printf(" ♞ │");
                 break;
             case wBishop:
-                printf("wB │");
+                printf(" ♗ │");
                 break;
             case bBishop:
-                printf("bB │");
+                printf(" ♝ │");
                 break;
             case wRook:
-                printf("wR │");
+                printf(" ♖ │");
                 break;
             case bRook:
-                printf("bR │");
+                printf(" ♜ │");
                 break;
             case wQueen:
-                printf("wQ │");
+                printf(" ♕ │");
                 break;
             case bQueen:
-                printf("bQ │");
+                printf(" ♛ │");
                 break;
             case wKing:
-                printf("wK │");
+                printf(" ♔ │");
                 break;
             case bKing:
-                printf("bK │");
+                printf(" ♚ │");
                 break;
             default:
                 printf("   │");
