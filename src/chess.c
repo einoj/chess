@@ -250,7 +250,7 @@ void printBoard(int tmpBoard[][8])
             printf("\n ├───┼───┼───┼───┼───┼───┼───┼───┤\n");
     }
     printf("\n └───┴───┴───┴───┴───┴───┴───┴───┘\n");
-    printf("   a  b  c  d  e  f  g  h \n");
+    printf("   a   b   c   d   e   f   g   h \n");
 }
 
 int pgnParser(char* pathname)
